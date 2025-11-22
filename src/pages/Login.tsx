@@ -40,7 +40,7 @@ const Login = () => {
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
               <div className="bg-orange-500 rounded-lg p-3">
-                <span className="text-white font-bold text-2xl">M</span>
+                <span className="text-white font-bold text-2xl">AI</span>
               </div>
             </div>
             <h1 className="text-2xl font-bold text-gray-800">AcertAI</h1>
