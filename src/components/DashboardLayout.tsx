@@ -109,15 +109,14 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       >
         {/* Logo */}
         <div className="p-6 border-b border-gray-200 flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="bg-orange-500 rounded-lg p-2">
-                <span className="text-white font-bold text-xl">AI</span>
-              </div>
-              {!isCollapsed && (
-                <span className="text-xl font-bold text-gray-800">AcertAI</span>
-              )}
-            </div>
+  <div className="flex items-center justify-between">
+    <div className="flex items-center space-x-3">
+      <img 
+        src="https://acertai.com/wp-content/uploads/2025/07/logo.png" 
+        alt="AcertAI" 
+        className={`${!isCollapsed ? 'h-10 w-auto' : 'h-8 w-auto'}`}
+      />
+    </div>
 
             {/* Mobile Close Button */}
             <Button
