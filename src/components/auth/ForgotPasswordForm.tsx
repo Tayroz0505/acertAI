@@ -73,7 +73,7 @@ export const ForgotPasswordForm = ({ onSwitchToLogin }: ForgotPasswordFormProps)
 
       <Button
         type="submit"
-        className="w-full bg-orange-500 hover:bg-orange-600"
+        className="w-full bg-mordomo-500 hover:bg-mordomo-600"
         disabled={isLoading}
       >
         {isLoading ? "Enviando..." : "Enviar link de recuperação"}
@@ -83,7 +83,7 @@ export const ForgotPasswordForm = ({ onSwitchToLogin }: ForgotPasswordFormProps)
         <button
           type="button"
           onClick={onSwitchToLogin}
-          className="text-sm text-orange-600 hover:text-orange-500"
+          className="text-sm text-mordomo-600 hover:text-mordomo-500"
         >
           Voltar para o login
         </button>

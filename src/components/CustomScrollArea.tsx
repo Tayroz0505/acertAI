@@ -29,7 +29,7 @@ const CustomScrollBar = React.forwardRef<
     ref={ref}
     orientation={orientation}
     className={cn(
-      "flex touch-none select-none transition-colors duration-300 ease-out hover:bg-orange-100/50",
+      "flex touch-none select-none transition-colors duration-300 ease-out hover:bg-mordomo-100/50",
       orientation === "vertical" &&
         "h-full w-3 border-l border-l-transparent p-[1px] hover:w-4",
       orientation === "horizontal" &&
@@ -39,7 +39,7 @@ const CustomScrollBar = React.forwardRef<
     {...props}
   >
     <ScrollAreaPrimitive.ScrollAreaThumb 
-      className="relative flex-1 rounded-full bg-gradient-to-r from-orange-400 to-orange-600 shadow-lg transition-all duration-300 ease-out hover:from-orange-500 hover:to-orange-700 hover:shadow-xl before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300" 
+      className="relative flex-1 rounded-full bg-gradient-to-r from-mordomo-400 to-mordomo-600 shadow-lg transition-all duration-300 ease-out hover:from-mordomo-500 hover:to-mordomo-700 hover:shadow-xl before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300" 
     />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>
 ))

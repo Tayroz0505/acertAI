@@ -47,7 +47,7 @@ const DashboardEmpresarial = () => {
                   <TabsTrigger value="empresarial">Empresarial</TabsTrigger>
                 </TabsList>
               </Tabs>
-              <div className="bg-orange-500 rounded-full p-1">
+              <div className="bg-mordomo-500 rounded-full p-1">
                 <span className="text-white font-bold text-sm px-2">JW</span>
               </div>
             </div>

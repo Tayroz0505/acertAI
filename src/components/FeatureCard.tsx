@@ -14,7 +14,7 @@ const colorVariants = {
   purple: "bg-purple-100 text-purple-600",
   yellow: "bg-yellow-100 text-yellow-600",
   indigo: "bg-indigo-100 text-indigo-600",
-  orange: "bg-orange-100 text-orange-600"
+  orange: "bg-mordomo-100 text-mordomo-600"
 };
 
 export const FeatureCard = ({ icon: Icon, title, description, color }: FeatureCardProps) => {

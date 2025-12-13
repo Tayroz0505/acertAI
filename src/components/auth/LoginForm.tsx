@@ -25,11 +25,11 @@ export const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }: LoginFormPro
     setIsLoading(true);
 
     const { error } = await signIn(email, password);
-    
+
     if (!error) {
       navigate("/dashboard");
     }
-    
+
     setIsLoading(false);
   };
 
@@ -78,7 +78,7 @@ export const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }: LoginFormPro
         <button
           type="button"
           onClick={onSwitchToForgot}
-          className="text-sm text-orange-600 hover:text-orange-500"
+          className="text-sm text-mordomo-600 hover:text-mordomo-500"
         >
           Esqueceu a senha?
         </button>
@@ -86,7 +86,7 @@ export const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }: LoginFormPro
 
       <Button
         type="submit"
-        className="w-full bg-orange-500 hover:bg-orange-600"
+        className="w-full bg-mordomo-500 hover:bg-mordomo-600"
         disabled={isLoading}
       >
         {isLoading ? "Entrando..." : "Entrar"}
@@ -95,13 +95,12 @@ export const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }: LoginFormPro
       <div className="text-center">
         <span className="text-sm text-gray-600">
           Não tem uma conta?{" "}
-          <button
-            type="button"
-            onClick={onSwitchToRegister}
-            className="text-orange-600 hover:text-orange-500 font-medium"
+          <a
+            href="https://acertai.com/#planos"
+            className="text-mordomo-600 hover:text-mordomo-500 font-medium"
           >
-            Cadastre-se
-          </button>
+            Adiquira aqui
+          </a>
         </span>
       </div>
     </form>

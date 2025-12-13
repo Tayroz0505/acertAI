@@ -1,37 +1,40 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useCategoriasMercado } from "@/hooks/useCategoriasMercado";
+import { useCategorias } from "@/hooks/useCategorias";
 
 interface NovaCategoriaModalProps {
   trigger?: React.ReactNode;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const cores = [
-  "#10B981", "#3B82F6", "#8B5CF6", "#EF4444", "#F59E0B", 
+  "#10B981", "#3B82F6", "#8B5CF6", "#EF4444", "#F59E0B",
   "#DC2626", "#6B7280", "#EC4899", "#059669", "#FF6B35"
 ];
 
-export const NovaCategoriaModal = ({ trigger }: NovaCategoriaModalProps) => {
-  const [open, setOpen] = useState(false);
+export const NovaCategoriaModal = ({ trigger, isOpen, onOpenChange }: NovaCategoriaModalProps) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  const isControlled = isOpen !== undefined;
+  const open = isControlled ? isOpen : internalOpen;
+  const setOpen = isControlled ? (onOpenChange || (() => { })) : setInternalOpen;
   const [formData, setFormData] = useState({
     nome: '',
-    descricao: '',
     cor: cores[0],
-    ativa: true
+    tipo: 'despesa' as 'receita' | 'despesa', // Default
   });
   const { toast } = useToast();
-  const { createCategoriaMercado } = useCategoriasMercado();
+  const { createCategoria } = useCategorias();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.nome.trim()) {
       toast({
         title: "Erro",
@@ -41,11 +44,11 @@ export const NovaCategoriaModal = ({ trigger }: NovaCategoriaModalProps) => {
       return;
     }
 
-    const result = await createCategoriaMercado({
+    const result = await createCategoria({
       nome: formData.nome.trim(),
-      descricao: formData.descricao.trim(),
+      tipo: formData.tipo,
       cor: formData.cor,
-      ativa: formData.ativa
+      icone: 'tag' // Default icon
     });
 
     if (result.error) {
@@ -56,15 +59,14 @@ export const NovaCategoriaModal = ({ trigger }: NovaCategoriaModalProps) => {
       });
       return;
     }
-    
+
     // Resetar formulário
     setFormData({
       nome: '',
-      descricao: '',
       cor: cores[0],
-      ativa: true
+      tipo: 'despesa'
     });
-    
+
     setOpen(false);
   };
 
@@ -79,7 +81,7 @@ export const NovaCategoriaModal = ({ trigger }: NovaCategoriaModalProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="bg-orange-500 hover:bg-orange-600">
+          <Button className="bg-mordomo-500 hover:bg-mordomo-600">
             <Plus className="w-4 h-4 mr-2" />
             Nova Categoria
           </Button>
@@ -89,7 +91,7 @@ export const NovaCategoriaModal = ({ trigger }: NovaCategoriaModalProps) => {
         <DialogHeader>
           <DialogTitle>Adicionar Nova Categoria</DialogTitle>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="nome">Nome *</Label>
@@ -97,19 +99,37 @@ export const NovaCategoriaModal = ({ trigger }: NovaCategoriaModalProps) => {
               id="nome"
               value={formData.nome}
               onChange={(e) => handleInputChange('nome', e.target.value)}
-              placeholder="Ex: Produtos de Limpeza"
+              placeholder="Ex: Alimentação, Transporte..."
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="descricao">Descrição</Label>
-            <Input
-              id="descricao"
-              value={formData.descricao}
-              onChange={(e) => handleInputChange('descricao', e.target.value)}
-              placeholder="Descrição da categoria"
-            />
+            <Label>Tipo *</Label>
+            <div className="flex space-x-4">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="tipo"
+                  value="receita"
+                  checked={formData.tipo === 'receita'}
+                  onChange={() => handleInputChange('tipo', 'receita')}
+                  className="w-4 h-4 text-mordomo-600 focus:ring-mordomo-500"
+                />
+                <span>Receita</span>
+              </label>
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="tipo"
+                  value="despesa"
+                  checked={formData.tipo === 'despesa'}
+                  onChange={() => handleInputChange('tipo', 'despesa')}
+                  className="w-4 h-4 text-mordomo-600 focus:ring-mordomo-500"
+                />
+                <span>Despesa</span>
+              </label>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -136,20 +156,11 @@ export const NovaCategoriaModal = ({ trigger }: NovaCategoriaModalProps) => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="ativa"
-              checked={formData.ativa}
-              onCheckedChange={(checked) => handleInputChange('ativa', checked as boolean)}
-            />
-            <Label htmlFor="ativa">Categoria ativa</Label>
-          </div>
-
           <div className="flex justify-end space-x-2 pt-4">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancelar
             </Button>
-            <Button type="submit" className="bg-orange-500 hover:bg-orange-600">
+            <Button type="submit" className="bg-mordomo-500 hover:bg-mordomo-600">
               Adicionar Categoria
             </Button>
           </div>

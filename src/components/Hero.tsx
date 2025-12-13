@@ -9,17 +9,17 @@ export const Hero = () => {
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
 
   return (
-    <section className="bg-gradient-to-br from-orange-50 to-white py-20">
+    <section className="bg-gradient-to-br from-mordomo-50 to-white py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+          <div className="inline-flex items-center bg-mordomo-100 text-mordomo-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
             <MessageCircle className="w-4 h-4 mr-2" />
             Agora com assistente no WhatsApp
           </div>
           
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
             Gerencie suas
-            <span className="text-orange-500 block">finanças de forma</span>
+            <span className="text-mordomo-500 block">finanças de forma</span>
             simples e inteligente
           </h1>
           
@@ -30,7 +30,7 @@ export const Hero = () => {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <Link to="/login">
-              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-lg px-8 py-4">
+              <Button size="lg" className="bg-mordomo-500 hover:bg-mordomo-600 text-lg px-8 py-4">
                 Começar Grátis
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
@@ -71,8 +71,8 @@ export const Hero = () => {
             </div>
             
             <div className="text-center">
-              <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className="w-8 h-8 text-orange-600" />
+              <div className="bg-mordomo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageCircle className="w-8 h-8 text-mordomo-600" />
               </div>
               <h3 className="font-semibold text-gray-900">WhatsApp Integrado</h3>
               <p className="text-gray-600">Lance transações por mensagem</p>

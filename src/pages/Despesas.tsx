@@ -38,6 +38,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCategorias } from "@/hooks/useCategorias";
 import { useDespesas } from "@/hooks/useDespesas";
 import { EditarDespesaModal } from "@/components/EditarDespesaModal";
+import { NovaCategoriaModal } from "@/components/NovaCategoriaModal";
 
 interface Despesa {
   id: string;
@@ -69,6 +70,7 @@ const Despesas = () => {
   // Estados para o modal de edição
   const [despesaEditando, setDespesaEditando] = useState<Despesa | null>(null);
   const [modalEditarAberto, setModalEditarAberto] = useState(false);
+  const [isNovaCategoriaModalOpen, setIsNovaCategoriaModalOpen] = useState(false);
 
   const adicionarDespesa = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -174,13 +176,25 @@ const Despesas = () => {
               Gerencie seus gastos e despesas
             </p>
           </div>
-          <Button
-            onClick={() => setActiveTab("adicionar")}
-            className="bg-orange-500 hover:bg-orange-600 w-full sm:w-auto"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Nova Despesa
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <NovaCategoriaModal
+              isOpen={isNovaCategoriaModalOpen}
+              onOpenChange={setIsNovaCategoriaModalOpen}
+              trigger={
+                <Button variant="outline" className="w-full sm:w-auto">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nova Categoria
+                </Button>
+              }
+            />
+            <Button
+              onClick={() => setActiveTab("adicionar")}
+              className="bg-mordomo-500 hover:bg-mordomo-600 w-full sm:w-auto"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Nova Despesa
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -220,8 +234,8 @@ const Despesas = () => {
 
           <Card className="p-4 md:p-6">
             <div className="flex items-center space-x-4">
-              <div className="bg-orange-100 rounded-full p-2 md:p-3">
-                <Calendar className="w-5 h-5 md:w-6 md:h-6 text-orange-600" />
+              <div className="bg-mordomo-100 rounded-full p-2 md:p-3">
+                <Calendar className="w-5 h-5 md:w-6 md:h-6 text-mordomo-600" />
               </div>
               <div>
                 <p className="text-xs md:text-sm text-gray-600">Categorias</p>
@@ -270,7 +284,7 @@ const Despesas = () => {
                     title="Filtrar por categoria"
                     value={categoriaFiltro}
                     onChange={(e) => setCategoriaFiltro(e.target.value)}
-                    className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                   >
                     <option value="">Todas as categorias</option>
                     {categorias.map((categoria) => (
@@ -520,13 +534,17 @@ const Despesas = () => {
                       id="categoria"
                       title="Selecionar categoria"
                       value={novaDespesa.categoria}
-                      onChange={(e) =>
-                        setNovaDespesa({
-                          ...novaDespesa,
-                          categoria: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      onChange={(e) => {
+                        if (e.target.value === "new-category") {
+                          setIsNovaCategoriaModalOpen(true);
+                        } else {
+                          setNovaDespesa({
+                            ...novaDespesa,
+                            categoria: e.target.value,
+                          });
+                        }
+                      }}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                     >
                       <option value="">Selecione uma categoria</option>
                       {categoriasDespesa.map((categoria) => (
@@ -534,6 +552,9 @@ const Despesas = () => {
                           {categoria.nome}
                         </option>
                       ))}
+                      <option value="new-category" className="bg-gray-100 font-semibold text-mordomo-600">
+                        + Adicionar Categoria
+                      </option>
                     </select>
                   </div>
 
@@ -564,7 +585,7 @@ const Despesas = () => {
                               tipo: e.target.value as "fixa" | "variavel",
                             })
                           }
-                          className="text-orange-600"
+                          className="text-mordomo-600"
                         />
                         <span>Despesa Fixa</span>
                       </label>
@@ -580,7 +601,7 @@ const Despesas = () => {
                               tipo: e.target.value as "fixa" | "variavel",
                             })
                           }
-                          className="text-orange-600"
+                          className="text-mordomo-600"
                         />
                         <span>Despesa Variável</span>
                       </label>
@@ -599,7 +620,7 @@ const Despesas = () => {
                   </Button>
                   <Button
                     type="submit"
-                    className="bg-orange-500 hover:bg-orange-600 w-full sm:w-auto"
+                    className="bg-mordomo-500 hover:bg-mordomo-600 w-full sm:w-auto"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Adicionar Despesa

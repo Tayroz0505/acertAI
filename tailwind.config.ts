@@ -57,6 +57,16 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        mordomo: {
+          50: '#eef9fc',
+          100: '#dcf3fa',
+          200: '#bce4f5',
+          400: '#58b8e4',
+          500: '#24a7d0',
+          600: '#1a88b0',
+          700: '#146282',
+          800: '#16526b',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -67,10 +67,10 @@ export const Pricing = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? 'border-orange-500 border-2 scale-105' : 'border-gray-200'} shadow-lg hover:shadow-xl transition-all`}>
+            <Card key={index} className={`relative ${plan.popular ? 'border-mordomo-500 border-2 scale-105' : 'border-gray-200'} shadow-lg hover:shadow-xl transition-all`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+                  <span className="bg-mordomo-500 text-white px-4 py-2 rounded-full text-sm font-bold">
                     MAIS POPULAR
                   </span>
                 </div>
@@ -93,7 +93,7 @@ export const Pricing = () => {
                 </ul>
                 <Link to="/dashboard">
                   <Button 
-                    className={`w-full ${plan.popular ? 'bg-orange-500 hover:bg-orange-600' : 'bg-gray-900 hover:bg-gray-800'} text-white`}
+                    className={`w-full ${plan.popular ? 'bg-mordomo-500 hover:bg-mordomo-600' : 'bg-gray-900 hover:bg-gray-800'} text-white`}
                     size="lg"
                   >
                     {plan.name === "Gratuito" ? "Começar Grátis" : "Assinar Agora"}

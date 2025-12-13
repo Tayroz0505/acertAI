@@ -241,7 +241,7 @@ const Dividas = () => {
           </div>
           <Button
             onClick={() => setActiveTab("adicionar")}
-            className="bg-orange-500 hover:bg-orange-600 w-full sm:w-auto"
+            className="bg-mordomo-500 hover:bg-mordomo-600 w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 mr-2" />
             Nova Dívida
@@ -349,7 +349,7 @@ const Dividas = () => {
                     title="Filtrar por status"
                     value={statusFiltro}
                     onChange={(e) => setStatusFiltro(e.target.value)}
-                    className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                   >
                     <option value="">Todos os status</option>
                     <option value="pendente">Pendentes</option>
@@ -361,7 +361,7 @@ const Dividas = () => {
                     title="Filtrar por categoria"
                     value={categoriaFiltro}
                     onChange={(e) => setCategoriaFiltro(e.target.value)}
-                    className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                   >
                     <option value="">Todas as categorias</option>
                     {categorias.map((categoria) => (
@@ -658,7 +658,7 @@ const Dividas = () => {
                       title="Selecionar categoria"
                       value={novaCategoria}
                       onChange={(e) => setNovaCategoria(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                     >
                       <option value="">Selecione uma categoria</option>
                       {categoriasDespesa.map((categoria) => (
@@ -683,7 +683,7 @@ const Dividas = () => {
                 <div className="flex flex-col sm:flex-row gap-4 sm:space-x-4">
                   <Button
                     onClick={handleAdicionarDivida}
-                    className="bg-orange-500 hover:bg-orange-600 w-full sm:w-auto"
+                    className="bg-mordomo-500 hover:bg-mordomo-600 w-full sm:w-auto"
                   >
                     Adicionar Dívida
                   </Button>

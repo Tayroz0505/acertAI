@@ -58,7 +58,7 @@ export const DetalhesVeiculoModal = ({
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle className="flex items-center">
-                <Car className="w-6 h-6 mr-2 text-orange-500" />
+                <Car className="w-6 h-6 mr-2 text-mordomo-500" />
                 {veiculo.marca} {veiculo.modelo} {veiculo.ano}
               </DialogTitle>
               <div className="flex space-x-2">
@@ -96,7 +96,7 @@ export const DetalhesVeiculoModal = ({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Car className="w-5 h-5 mr-2 text-orange-500" />
+                  <Car className="w-5 h-5 mr-2 text-mordomo-500" />
                   Informações do Veículo
                 </CardTitle>
               </CardHeader>
@@ -154,7 +154,7 @@ export const DetalhesVeiculoModal = ({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <AlertTriangle className="w-5 h-5 mr-2 text-orange-500" />
+                  <AlertTriangle className="w-5 h-5 mr-2 text-mordomo-500" />
                   Manutenções Pendentes
                 </CardTitle>
               </CardHeader>

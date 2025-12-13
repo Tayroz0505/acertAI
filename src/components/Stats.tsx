@@ -19,7 +19,7 @@ export const Stats = () => {
       icon: TrendingUp,
       value: "98%",
       label: "Satisfação",
-      color: "text-orange-600"
+      color: "text-mordomo-600"
     },
     {
       icon: Clock,
@@ -30,11 +30,11 @@ export const Stats = () => {
   ];
 
   return (
-    <section className="py-20 bg-orange-500">
+    <section className="py-20 bg-mordomo-500">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-white mb-4">NÚMEROS QUE FALAM POR SI</h2>
-          <p className="text-xl text-orange-100 max-w-3xl mx-auto">
+          <p className="text-xl text-mordomo-100 max-w-3xl mx-auto">
             Confiado por milhares de pessoas e empresas
           </p>
         </div>
@@ -46,7 +46,7 @@ export const Stats = () => {
                 <stat.icon className={`w-10 h-10 ${stat.color}`} />
               </div>
               <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
-              <div className="text-orange-100 text-lg">{stat.label}</div>
+              <div className="text-mordomo-100 text-lg">{stat.label}</div>
             </div>
           ))}
         </div>

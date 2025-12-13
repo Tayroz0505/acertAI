@@ -144,7 +144,7 @@ export const EditarOrcamentoModal = ({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancelar
             </Button>
-            <Button type="submit" className="bg-orange-500 hover:bg-orange-600">
+            <Button type="submit" className="bg-mordomo-500 hover:bg-mordomo-600">
               Salvar
             </Button>
           </div>

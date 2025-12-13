@@ -57,11 +57,14 @@ const Perfil = () => {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Verificar se é uma imagem
-      if (!file.type.startsWith('image/')) {
+      // Lista de tipos permitidos (Whitelist)
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+      // Verificar se é um tipo permitido
+      if (!allowedTypes.includes(file.type)) {
         toast({
-          title: "Erro",
-          description: "Por favor, selecione apenas arquivos de imagem.",
+          title: "Formato não suportado",
+          description: "Por favor, envie apenas imagens JPG, PNG ou WebP. SVGs e outros formatos não são permitidos por segurança.",
           variant: "destructive",
         });
         return;
@@ -79,7 +82,7 @@ const Perfil = () => {
 
       // Fazer upload real para Supabase Storage
       const avatarUrl = await uploadAvatar(file);
-      
+
       if (avatarUrl) {
         // Atualizar o estado local para mostrar a nova imagem
         setFormData(prev => ({
@@ -132,9 +135,9 @@ const Perfil = () => {
   // Formatação de data de registro
   const formatRegistrationDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', { 
-      year: 'numeric', 
-      month: 'long' 
+    return date.toLocaleDateString('pt-BR', {
+      year: 'numeric',
+      month: 'long'
     });
   };
 
@@ -143,7 +146,7 @@ const Perfil = () => {
       <DashboardLayout>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-mordomo-500"></div>
             <p className="mt-4 text-muted-foreground">Carregando perfil...</p>
           </div>
         </div>
@@ -184,7 +187,7 @@ const Perfil = () => {
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/*"
+                    accept=".jpg, .jpeg, .png, .webp"
                     onChange={handleFileChange}
                     className="hidden"
                   />
@@ -209,21 +212,21 @@ const Perfil = () => {
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Lock className="w-5 h-5 mr-2 text-orange-500" />
+                <Lock className="w-5 h-5 mr-2 text-mordomo-500" />
                 Segurança
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full justify-start h-12"
                 onClick={() => setShowChangePasswordModal(true)}
               >
                 <Lock className="w-4 h-4 mr-3" />
                 Alterar Senha
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full justify-start h-12 text-red-600 hover:text-red-700 hover:bg-red-50"
                 onClick={() => setShowDeleteAccountModal(true)}
               >
@@ -238,7 +241,7 @@ const Perfil = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="flex items-center">
-              <User className="w-5 h-5 mr-2 text-orange-500" />
+              <User className="w-5 h-5 mr-2 text-mordomo-500" />
               Informações Pessoais
             </CardTitle>
             {!isEditing ? (
@@ -252,7 +255,7 @@ const Perfil = () => {
               <div className="flex space-x-2">
                 <Button
                   onClick={handleSave}
-                  className="bg-orange-500 hover:bg-orange-600"
+                  className="bg-mordomo-500 hover:bg-mordomo-600"
                 >
                   Salvar
                 </Button>
@@ -314,7 +317,7 @@ const Perfil = () => {
         isOpen={showChangePasswordModal}
         onClose={() => setShowChangePasswordModal(false)}
       />
-      
+
       <DeleteAccountModal
         isOpen={showDeleteAccountModal}
         onClose={() => setShowDeleteAccountModal(false)}

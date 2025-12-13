@@ -371,7 +371,7 @@ const Mercado = () => {
               ? "border-l-red-500 bg-red-50"
               : dadosOrcamento.percentualGasto > 80
               ? "border-l-yellow-500 bg-yellow-50"
-              : "border-l-orange-500"
+              : "border-l-mordomo-500"
           }`}
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
@@ -565,7 +565,7 @@ const Mercado = () => {
                 </h2>
                 <NovoItemMercadoModal
                   trigger={
-                    <Button className="w-full md:w-auto bg-orange-500 hover:bg-orange-600">
+                    <Button className="w-full md:w-auto bg-mordomo-500 hover:bg-mordomo-600">
                       <Plus className="w-4 h-4 mr-2" />
                       Adicionar Item
                     </Button>
@@ -772,7 +772,7 @@ const Mercado = () => {
                   </Button>
                   <NovaCategoriaModal
                     trigger={
-                      <Button className="w-full md:w-auto bg-orange-500 hover:bg-orange-600">
+                      <Button className="w-full md:w-auto bg-mordomo-500 hover:bg-mordomo-600">
                         <Plus className="w-4 h-4 mr-2" />
                         Nova Categoria
                       </Button>

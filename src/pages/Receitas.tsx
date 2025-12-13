@@ -38,6 +38,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCategorias } from "@/hooks/useCategorias";
 import { useReceitas } from "@/hooks/useReceitas";
 import { EditarReceitaModal } from "@/components/EditarReceitaModal";
+import { NovaCategoriaModal } from "@/components/NovaCategoriaModal";
 
 interface Receita {
   id: string;
@@ -69,6 +70,9 @@ const Receitas = () => {
   // Estados para o modal de edição
   const [receitaEditando, setReceitaEditando] = useState<Receita | null>(null);
   const [modalEditarAberto, setModalEditarAberto] = useState(false);
+  const [isNovaCategoriaModalOpen, setIsNovaCategoriaModalOpen] = useState(false);
+
+  // ... (rest of the component)
 
   const adicionarReceita = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -174,13 +178,25 @@ const Receitas = () => {
               Gerencie suas fontes de renda
             </p>
           </div>
-          <Button
-            onClick={() => setActiveTab("adicionar")}
-            className="bg-orange-500 hover:bg-orange-600 w-full sm:w-auto"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Nova Receita
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <NovaCategoriaModal
+              isOpen={isNovaCategoriaModalOpen}
+              onOpenChange={setIsNovaCategoriaModalOpen}
+              trigger={
+                <Button variant="outline" className="w-full sm:w-auto">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nova Categoria
+                </Button>
+              }
+            />
+            <Button
+              onClick={() => setActiveTab("adicionar")}
+              className="bg-mordomo-500 hover:bg-mordomo-600 w-full sm:w-auto"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Nova Receita
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -220,8 +236,8 @@ const Receitas = () => {
 
           <Card className="p-4 md:p-6">
             <div className="flex items-center space-x-4">
-              <div className="bg-orange-100 rounded-full p-2 md:p-3">
-                <Calendar className="w-5 h-5 md:w-6 md:h-6 text-orange-600" />
+              <div className="bg-mordomo-100 rounded-full p-2 md:p-3">
+                <Calendar className="w-5 h-5 md:w-6 md:h-6 text-mordomo-600" />
               </div>
               <div>
                 <p className="text-xs md:text-sm text-gray-600">Categorias</p>
@@ -270,7 +286,7 @@ const Receitas = () => {
                     title="Filtrar por categoria"
                     value={categoriaFiltro}
                     onChange={(e) => setCategoriaFiltro(e.target.value)}
-                    className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                   >
                     <option value="">Todas as categorias</option>
                     {categorias.map((categoria) => (
@@ -522,13 +538,17 @@ const Receitas = () => {
                       id="categoria"
                       title="Selecionar categoria"
                       value={novaReceita.categoria}
-                      onChange={(e) =>
-                        setNovaReceita({
-                          ...novaReceita,
-                          categoria: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      onChange={(e) => {
+                        if (e.target.value === "new-category") {
+                          setIsNovaCategoriaModalOpen(true);
+                        } else {
+                          setNovaReceita({
+                            ...novaReceita,
+                            categoria: e.target.value,
+                          });
+                        }
+                      }}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                     >
                       <option value="">Selecione uma categoria</option>
                       {categoriasReceita.map((categoria) => (
@@ -536,6 +556,9 @@ const Receitas = () => {
                           {categoria.nome}
                         </option>
                       ))}
+                      <option value="new-category" className="bg-gray-100 font-semibold text-mordomo-600">
+                        + Adicionar Categoria
+                      </option>
                     </select>
                   </div>
 
@@ -566,7 +589,7 @@ const Receitas = () => {
                               tipo: e.target.value as "fixa" | "variavel",
                             })
                           }
-                          className="text-orange-600"
+                          className="text-mordomo-600"
                         />
                         <span>Receita Fixa</span>
                       </label>
@@ -582,7 +605,7 @@ const Receitas = () => {
                               tipo: e.target.value as "fixa" | "variavel",
                             })
                           }
-                          className="text-orange-600"
+                          className="text-mordomo-600"
                         />
                         <span>Receita Variável</span>
                       </label>
@@ -601,7 +624,7 @@ const Receitas = () => {
                   </Button>
                   <Button
                     type="submit"
-                    className="bg-orange-500 hover:bg-orange-600 w-full sm:w-auto"
+                    className="bg-mordomo-500 hover:bg-mordomo-600 w-full sm:w-auto"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Adicionar Receita

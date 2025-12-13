@@ -321,7 +321,7 @@ const Dashboard = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 md:mb-8">
           <div className="flex items-center space-x-4">
-            <div className="bg-orange-500 rounded-full p-2 md:p-3">
+            <div className="bg-mordomo-500 rounded-full p-2 md:p-3">
               <span className="text-white font-bold text-lg md:text-xl">
                 {profile?.name ? profile.name.charAt(0).toUpperCase() : "U"}
               </span>
@@ -384,7 +384,7 @@ const Dashboard = () => {
                   {stat.value}
                 </p>
                 {stat.subtitle && (
-                  <p className="text-xs md:text-sm text-orange-600">
+                  <p className="text-xs md:text-sm text-mordomo-600">
                     {stat.subtitle}
                   </p>
                 )}
@@ -411,7 +411,7 @@ const Dashboard = () => {
                         stat.badgeType === "good"
                           ? "bg-green-100 text-green-800"
                           : stat.badgeType === "warning"
-                          ? "bg-orange-100 text-orange-800"
+                          ? "bg-mordomo-100 text-mordomo-800"
                           : "bg-red-100 text-red-800"
                       }`}
                     >
@@ -420,7 +420,7 @@ const Dashboard = () => {
                           stat.badgeType === "good"
                             ? "bg-green-500"
                             : stat.badgeType === "warning"
-                            ? "bg-orange-500"
+                            ? "bg-mordomo-500"
                             : "bg-red-500"
                         }`}
                       ></div>
@@ -441,7 +441,7 @@ const Dashboard = () => {
             </h2>
             <Button
               variant="ghost"
-              className="text-orange-600 hover:text-orange-700 text-sm"
+              className="text-mordomo-600 hover:text-mordomo-700 text-sm"
               onClick={() => navigate("/transacoes")}
             >
               Ver todas
@@ -513,7 +513,7 @@ const Dashboard = () => {
               </div>
               <Button
                 variant="ghost"
-                className="text-orange-600 hover:text-orange-700 text-sm"
+                className="text-mordomo-600 hover:text-mordomo-700 text-sm"
                 onClick={() => navigate("/mercado")}
               >
                 Ver todos
@@ -582,7 +582,7 @@ const Dashboard = () => {
               </div>
               <Button
                 variant="ghost"
-                className="text-orange-600 hover:text-orange-700 text-sm"
+                className="text-mordomo-600 hover:text-mordomo-700 text-sm"
                 onClick={() => navigate("/dividas")}
               >
                 Ver todas
@@ -621,12 +621,12 @@ const Dashboard = () => {
         <Card className="p-4 md:p-6">
           <div className="flex items-center justify-between mb-4 md:mb-6">
             <h2 className="text-lg md:text-xl font-bold text-gray-900 flex items-center">
-              <Car className="w-4 h-4 md:w-5 md:h-5 mr-2 text-orange-500" />
+              <Car className="w-4 h-4 md:w-5 md:h-5 mr-2 text-mordomo-500" />
               Meus Veículos
             </h2>
             <Button
               variant="ghost"
-              className="text-orange-600 hover:text-orange-700 text-sm"
+              className="text-mordomo-600 hover:text-mordomo-700 text-sm"
               onClick={() => navigate("/veiculos")}
             >
               Ver todos
@@ -644,8 +644,8 @@ const Dashboard = () => {
                   className="flex items-center justify-between p-3 md:p-4 rounded-lg border border-gray-100 hover:bg-gray-50"
                 >
                   <div className="flex items-center space-x-3 md:space-x-4">
-                    <div className="p-2 rounded-lg bg-orange-500 bg-opacity-20">
-                      <Car className="w-4 h-4 md:w-5 md:h-5 text-orange-500" />
+                    <div className="p-2 rounded-lg bg-mordomo-500 bg-opacity-20">
+                      <Car className="w-4 h-4 md:w-5 md:h-5 text-mordomo-500" />
                     </div>
                     <div>
                       <p className="text-sm md:text-base font-medium text-gray-900">

@@ -201,7 +201,7 @@ const Categorias = () => {
             </Button>
             <Button
               onClick={() => setActiveTab("adicionar")}
-              className="bg-orange-500 hover:bg-orange-600 w-full sm:w-auto"
+              className="bg-mordomo-500 hover:bg-mordomo-600 w-full sm:w-auto"
             >
               <Plus className="w-4 h-4 mr-2" />
               Nova Categoria
@@ -293,7 +293,7 @@ const Categorias = () => {
                     title="Filtrar por tipo"
                     value={tipoFiltro}
                     onChange={(e) => setTipoFiltro(e.target.value)}
-                    className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                   >
                     <option value="">Todos os tipos</option>
                     <option value="receita">Receitas</option>
@@ -519,7 +519,7 @@ const Categorias = () => {
                       onChange={(e) =>
                         setNovoTipo(e.target.value as "receita" | "despesa")
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                     >
                       <option value="receita">Receita</option>
                       <option value="despesa">Despesa</option>
@@ -566,7 +566,7 @@ const Categorias = () => {
                 <div className="flex flex-col sm:flex-row gap-4 sm:space-x-4">
                   <Button
                     onClick={handleAdicionarCategoria}
-                    className="bg-orange-500 hover:bg-orange-600 w-full sm:w-auto"
+                    className="bg-mordomo-500 hover:bg-mordomo-600 w-full sm:w-auto"
                   >
                     Adicionar Categoria
                   </Button>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Home,
+  Calendar,
   TrendingUp,
   TrendingDown,
   FileText,
@@ -38,6 +39,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     { icon: TrendingUp, label: "Receitas", path: "/receitas" },
     { icon: TrendingDown, label: "Despesas", path: "/despesas" },
     { icon: FileText, label: "Transações", path: "/transacoes" },
+    { icon: Calendar, label: "Compromissos", path: "/compromissos" },
     { icon: PieChart, label: "Dívidas", path: "/dividas" },
     { icon: Tag, label: "Categorias", path: "/categorias" },
     { icon: BarChart3, label: "Relatórios", path: "/relatorios" },
@@ -96,10 +98,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <div
         className={`
           fixed top-0 left-0 h-screen
-          ${
-            isMobileMenuOpen
-              ? "translate-x-0"
-              : "-translate-x-full lg:translate-x-0"
+          ${isMobileMenuOpen
+            ? "translate-x-0"
+            : "-translate-x-full lg:translate-x-0"
           }
           transition-all duration-300
           bg-white border-r border-gray-200 flex flex-col
@@ -109,20 +110,20 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       >
         {/* Logo */}
         <div className="p-6 border-b border-gray-200 flex-shrink-0">
-  <div className="flex items-center justify-between">
-    <div className="flex items-center space-x-3">
-      <img 
-        src="https://acertai.com/wp-content/uploads/2025/07/logo.png" 
-        alt="AcertAI" 
-        className={`${!isCollapsed ? 'h-10 w-auto' : 'h-8 w-auto'}`}
-      />
-    </div>
+          <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center w-full">
+              <img
+                src={isCollapsed ? "/acert-ai-logo-collapsed.png" : "/acert-ai-logo.png"}
+                alt="AcertAI"
+                className={`${!isCollapsed ? 'h-12 w-auto' : 'h-10 w-10'} object-contain`}
+              />
+            </div>
 
             {/* Mobile Close Button */}
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden h-8 w-8 hover:bg-gray-100 transition-colors"
+              className="lg:hidden h-8 w-8 hover:bg-gray-100 transition-colors absolute right-4"
               onClick={closeMobileMenu}
             >
               <X className="h-5 w-5 text-gray-600" />
@@ -158,11 +159,10 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 key={item.path}
                 to={item.path}
                 onClick={closeMobileMenu}
-                className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === item.path
-                    ? "bg-orange-100 text-orange-600"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                } ${isCollapsed ? "justify-center" : "space-x-3"}`}
+                className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${location.pathname === item.path
+                  ? "bg-mordomo-100 text-mordomo-600"
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  } ${isCollapsed ? "justify-center" : "space-x-3"}`}
                 title={isCollapsed ? item.label : undefined}
               >
                 <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -176,9 +176,8 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className="p-4 border-t border-gray-200 flex-shrink-0">
           <Button
             variant="ghost"
-            className={`w-full text-gray-600 hover:text-gray-900 ${
-              isCollapsed ? "justify-center px-0" : "justify-start"
-            }`}
+            className={`w-full text-gray-600 hover:text-gray-900 ${isCollapsed ? "justify-center px-0" : "justify-start"
+              }`}
             onClick={() => {
               handleLogout();
               closeMobileMenu();
@@ -193,9 +192,8 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
       {/* Main Content */}
       <div
-        className={`flex-1 ${
-          isCollapsed ? "lg:ml-20" : "lg:ml-64"
-        } transition-all duration-300`}
+        className={`flex-1 ${isCollapsed ? "lg:ml-20" : "lg:ml-64"
+          } transition-all duration-300`}
       >
         <div className="lg:hidden h-16"></div>{" "}
         {/* Spacer for mobile menu button */}

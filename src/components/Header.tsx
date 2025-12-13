@@ -12,23 +12,23 @@ export const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="bg-orange-500 rounded-lg p-2">
+            <div className="bg-mordomo-500 rounded-lg p-2">
               <span className="text-white font-bold text-xl">M</span>
             </div>
             <span className="text-2xl font-bold text-gray-800">Mordomo</span>
           </Link>
           
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#recursos" className="text-gray-600 hover:text-orange-500 transition-colors">
+            <a href="#recursos" className="text-gray-600 hover:text-mordomo-500 transition-colors">
               Recursos
             </a>
-            <a href="#como-funciona" className="text-gray-600 hover:text-orange-500 transition-colors">
+            <a href="#como-funciona" className="text-gray-600 hover:text-mordomo-500 transition-colors">
               Como Funciona
             </a>
-            <a href="#precos" className="text-gray-600 hover:text-orange-500 transition-colors">
+            <a href="#precos" className="text-gray-600 hover:text-mordomo-500 transition-colors">
               Preços
             </a>
-            <a href="#contato" className="text-gray-600 hover:text-orange-500 transition-colors">
+            <a href="#contato" className="text-gray-600 hover:text-mordomo-500 transition-colors">
               Contato
             </a>
           </nav>
@@ -40,7 +40,7 @@ export const Header = () => {
               </Button>
             </Link>
             <Link to="/login">
-              <Button className="bg-orange-500 hover:bg-orange-600">
+              <Button className="bg-mordomo-500 hover:bg-mordomo-600">
                 Começar Grátis
               </Button>
             </Link>
@@ -57,16 +57,16 @@ export const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-gray-100">
             <nav className="flex flex-col space-y-4 mt-4">
-              <a href="#recursos" className="text-gray-600 hover:text-orange-500 transition-colors">
+              <a href="#recursos" className="text-gray-600 hover:text-mordomo-500 transition-colors">
                 Recursos
               </a>
-              <a href="#como-funciona" className="text-gray-600 hover:text-orange-500 transition-colors">
+              <a href="#como-funciona" className="text-gray-600 hover:text-mordomo-500 transition-colors">
                 Como Funciona
               </a>
-              <a href="#precos" className="text-gray-600 hover:text-orange-500 transition-colors">
+              <a href="#precos" className="text-gray-600 hover:text-mordomo-500 transition-colors">
                 Preços
               </a>
-              <a href="#contato" className="text-gray-600 hover:text-orange-500 transition-colors">
+              <a href="#contato" className="text-gray-600 hover:text-mordomo-500 transition-colors">
                 Contato
               </a>
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-100">
@@ -76,7 +76,7 @@ export const Header = () => {
                   </Button>
                 </Link>
                 <Link to="/login">
-                  <Button className="bg-orange-500 hover:bg-orange-600 w-full">
+                  <Button className="bg-mordomo-500 hover:bg-mordomo-600 w-full">
                     Começar Grátis
                   </Button>
                 </Link>

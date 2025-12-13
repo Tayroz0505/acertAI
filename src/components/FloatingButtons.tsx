@@ -32,7 +32,7 @@ export const FloatingButtons = () => {
       {showScrollTop && (
         <Button
           onClick={scrollToTop}
-          className="fixed left-6 bottom-6 z-50 w-12 h-12 rounded-full bg-orange-500 hover:bg-orange-600 text-white shadow-lg transition-all duration-300 animate-fade-in"
+          className="fixed left-6 bottom-6 z-50 w-12 h-12 rounded-full bg-mordomo-500 hover:bg-mordomo-600 text-white shadow-lg transition-all duration-300 animate-fade-in"
           size="icon"
         >
           <ArrowUp className="w-5 h-5" />

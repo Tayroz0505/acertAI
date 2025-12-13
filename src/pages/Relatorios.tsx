@@ -548,7 +548,7 @@ const Relatorios = () => {
               <Card className="w-full">
                 <CardHeader>
                   <CardTitle className="flex items-center text-base md:text-lg">
-                    <FileText className="w-5 h-5 mr-2 text-orange-500" />
+                    <FileText className="w-5 h-5 mr-2 text-mordomo-500" />
                     Receitas vs Despesas - {selectedPeriod}
                   </CardTitle>
                 </CardHeader>
@@ -575,7 +575,7 @@ const Relatorios = () => {
               <Card className="w-full">
                 <CardHeader>
                   <CardTitle className="flex items-center text-base md:text-lg">
-                    <TrendingUp className="w-5 h-5 mr-2 text-orange-500" />
+                    <TrendingUp className="w-5 h-5 mr-2 text-mordomo-500" />
                     Evolução do Saldo - {selectedPeriod}
                   </CardTitle>
                 </CardHeader>
@@ -610,7 +610,7 @@ const Relatorios = () => {
               <Card className="w-full">
                 <CardHeader>
                   <CardTitle className="flex items-center text-base md:text-lg">
-                    <PieChartIcon className="w-5 h-5 mr-2 text-orange-500" />
+                    <PieChartIcon className="w-5 h-5 mr-2 text-mordomo-500" />
                     Despesas por Categoria
                   </CardTitle>
                 </CardHeader>

@@ -132,12 +132,12 @@ const Transacoes = () => {
             <div className="flex items-center space-x-4">
               <div
                 className={`${
-                  saldoTotal >= 0 ? "bg-blue-100" : "bg-orange-100"
+                  saldoTotal >= 0 ? "bg-blue-100" : "bg-mordomo-100"
                 } rounded-full p-2 md:p-3`}
               >
                 <DollarSign
                   className={`w-5 h-5 md:w-6 md:h-6 ${
-                    saldoTotal >= 0 ? "text-blue-600" : "text-orange-600"
+                    saldoTotal >= 0 ? "text-blue-600" : "text-mordomo-600"
                   }`}
                 />
               </div>
@@ -145,7 +145,7 @@ const Transacoes = () => {
                 <p className="text-xs md:text-sm text-gray-600">Saldo Total</p>
                 <p
                   className={`text-lg md:text-2xl font-bold ${
-                    saldoTotal >= 0 ? "text-blue-600" : "text-orange-600"
+                    saldoTotal >= 0 ? "text-blue-600" : "text-mordomo-600"
                   }`}
                 >
                   R${" "}
@@ -192,7 +192,7 @@ const Transacoes = () => {
                 title="Filtrar por tipo"
                 value={tipoFiltro}
                 onChange={(e) => setTipoFiltro(e.target.value)}
-                className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
               >
                 <option value="">Todos os tipos</option>
                 <option value="receita">Receitas</option>
@@ -203,7 +203,7 @@ const Transacoes = () => {
                 title="Filtrar por categoria"
                 value={categoriaFiltro}
                 onChange={(e) => setCategoriaFiltro(e.target.value)}
-                className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
               >
                 <option value="">Todas as categorias</option>
                 {categorias.map((categoria) => (

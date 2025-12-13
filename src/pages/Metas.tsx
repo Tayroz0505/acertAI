@@ -347,7 +347,7 @@ const Metas = () => {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-lg md:text-2xl font-bold text-orange-600">
+              <div className="text-lg md:text-2xl font-bold text-mordomo-600">
                 {progressoMedio.toFixed(1)}%
               </div>
             </CardContent>
@@ -376,7 +376,7 @@ const Metas = () => {
                   title="Filtrar por status"
                   value={filtroStatus}
                   onChange={(e) => setFiltroStatus(e.target.value)}
-                  className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                 >
                   <option value="todas">Todos os Status</option>
                   <option value="ativa">Ativas</option>
@@ -389,7 +389,7 @@ const Metas = () => {
                   title="Filtrar por tipo"
                   value={filtroTipo}
                   onChange={(e) => setFiltroTipo(e.target.value)}
-                  className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
                 >
                   <option value="todos">Todos os Tipos</option>
                   <option value="economia">Economia</option>
@@ -809,7 +809,7 @@ const Metas = () => {
                       </Button>
                       <Button
                         onClick={adicionarCategoriaMeta}
-                        className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600"
+                        className="w-full sm:w-auto bg-mordomo-500 hover:bg-mordomo-600"
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Adicionar Categoria

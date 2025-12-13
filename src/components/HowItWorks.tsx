@@ -9,7 +9,7 @@ export const HowItWorks = () => {
       icon: Smartphone,
       title: "1. Cadastre-se",
       description: "Crie sua conta gratuita em menos de 2 minutos e comece a usar imediatamente.",
-      color: "bg-orange-100 text-orange-600"
+      color: "bg-mordomo-100 text-mordomo-600"
     },
     {
       icon: BarChart3,
@@ -50,13 +50,13 @@ export const HowItWorks = () => {
           ))}
         </div>
 
-        <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-12 text-center text-white">
+        <div className="bg-gradient-to-r from-mordomo-500 to-mordomo-600 rounded-3xl p-12 text-center text-white">
           <h3 className="text-3xl font-bold mb-4">Pronto para começar?</h3>
           <p className="text-xl mb-8 opacity-90">
             Junte-se a milhares de usuários que já transformaram suas finanças com o Mordomo
           </p>
           <Link to="/dashboard">
-            <Button size="lg" className="bg-white text-orange-600 hover:bg-gray-100 text-lg px-8 py-4">
+            <Button size="lg" className="bg-white text-mordomo-600 hover:bg-gray-100 text-lg px-8 py-4">
               Começar Agora Grátis
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>

@@ -31,7 +31,7 @@ export const GerenciarTiposManutencaoModal = ({
     const colors: { [key: string]: string } = {
       "Motor": "bg-red-100 text-red-800 border-red-200",
       "Transmissão": "bg-blue-100 text-blue-800 border-blue-200",
-      "Freios": "bg-orange-100 text-orange-800 border-orange-200",
+      "Freios": "bg-mordomo-100 text-mordomo-800 border-mordomo-200",
       "Suspensão": "bg-purple-100 text-purple-800 border-purple-200",
       "Elétrico": "bg-yellow-100 text-yellow-800 border-yellow-200",
       "Arrefecimento": "bg-cyan-100 text-cyan-800 border-cyan-200",
@@ -50,13 +50,13 @@ export const GerenciarTiposManutencaoModal = ({
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle className="flex items-center">
-                <Settings className="w-6 h-6 mr-2 text-orange-500" />
+                <Settings className="w-6 h-6 mr-2 text-mordomo-500" />
                 Gerenciar Tipos de Manutenção
               </DialogTitle>
               <div className="flex space-x-2">
                 <Button
                   onClick={() => setNovoTipoModalOpen(true)}
-                  className="bg-orange-500 hover:bg-orange-600"
+                  className="bg-mordomo-500 hover:bg-mordomo-600"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Novo Tipo
@@ -74,7 +74,7 @@ export const GerenciarTiposManutencaoModal = ({
           <div className="space-y-4">
             {loading ? (
               <div className="flex justify-center items-center h-32">
-                <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+                <Loader2 className="w-8 h-8 animate-spin text-mordomo-500" />
               </div>
             ) : tiposManutencao.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -127,7 +127,7 @@ export const GerenciarTiposManutencaoModal = ({
                 <p>Nenhum tipo de manutenção cadastrado</p>
                 <Button
                   onClick={() => setNovoTipoModalOpen(true)}
-                  className="mt-3 bg-orange-500 hover:bg-orange-600"
+                  className="mt-3 bg-mordomo-500 hover:bg-mordomo-600"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Cadastrar Primeiro Tipo

@@ -96,7 +96,7 @@ export default function Veiculos() {
               variant="outline"
               size="sm"
               disabled={loading}
-              className="border-orange-500 text-orange-600 hover:bg-orange-50 w-full sm:w-auto"
+              className="border-mordomo-500 text-mordomo-600 hover:bg-mordomo-50 w-full sm:w-auto"
             >
               <RefreshCw
                 className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
@@ -106,14 +106,14 @@ export default function Veiculos() {
             <Button
               onClick={() => setGerenciarTiposModalOpen(true)}
               variant="outline"
-              className="border-orange-500 text-orange-600 hover:bg-orange-50 w-full sm:w-auto"
+              className="border-mordomo-500 text-mordomo-600 hover:bg-mordomo-50 w-full sm:w-auto"
             >
               <Settings className="w-4 h-4 mr-2" />
               Tipos de Manutenção
             </Button>
             <Button
               onClick={() => setNovoVeiculoModalOpen(true)}
-              className="bg-orange-500 hover:bg-orange-600 w-full sm:w-auto"
+              className="bg-mordomo-500 hover:bg-mordomo-600 w-full sm:w-auto"
             >
               <Plus className="w-4 h-4 mr-2" />
               Novo Veículo
@@ -124,7 +124,7 @@ export default function Veiculos() {
         {/* Lista de Veículos */}
         {loadingVeiculos ? (
           <div className="flex justify-center items-center h-32">
-            <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+            <Loader2 className="w-8 h-8 animate-spin text-mordomo-500" />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
@@ -137,7 +137,7 @@ export default function Veiculos() {
                   <CardTitle className="text-base md:text-lg font-semibold">
                     {veiculo.marca} {veiculo.modelo}
                   </CardTitle>
-                  <Car className="h-5 w-5 text-orange-500" />
+                  <Car className="h-5 w-5 text-mordomo-500" />
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2 mb-4">
@@ -183,14 +183,14 @@ export default function Veiculos() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center text-lg md:text-xl">
-              <Settings className="w-5 h-5 mr-2 text-orange-500" />
+              <Settings className="w-5 h-5 mr-2 text-mordomo-500" />
               Manutenções Pendentes
             </CardTitle>
           </CardHeader>
           <CardContent>
             {loadingManutencoes ? (
               <div className="flex justify-center items-center h-20">
-                <Loader2 className="w-6 h-6 animate-spin text-orange-500" />
+                <Loader2 className="w-6 h-6 animate-spin text-mordomo-500" />
               </div>
             ) : (
               <ScrollArea className="h-[400px] md:h-[500px] pr-4">

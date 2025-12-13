@@ -90,7 +90,7 @@ export const NovoTipoManutencaoModal = ({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center">
-            <Plus className="w-5 h-5 mr-2 text-orange-500" />
+            <Plus className="w-5 h-5 mr-2 text-mordomo-500" />
             Novo Tipo de Manutenção
           </DialogTitle>
         </DialogHeader>
@@ -150,7 +150,7 @@ export const NovoTipoManutencaoModal = ({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancelar
             </Button>
-            <Button type="submit" className="bg-orange-500 hover:bg-orange-600">
+            <Button type="submit" className="bg-mordomo-500 hover:bg-mordomo-600">
               Adicionar Tipo
             </Button>
           </div>

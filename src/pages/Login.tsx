@@ -33,17 +33,19 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-mordomo-50 to-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow-lg p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="flex items-center justify-center mb-4">
-              <div className="bg-orange-500 rounded-lg p-3">
-                <span className="text-white font-bold text-2xl">AI</span>
-              </div>
+            <div className="flex items-center justify-center mb-6">
+              <img
+                src="/acert-ai-logo.png"
+                alt="AcertAI"
+                className="h-16 w-auto object-contain"
+              />
             </div>
-            <h1 className="text-2xl font-bold text-gray-800">AcertAI</h1>
+            {/* Removed text header since logo contains text */}
             <p className="text-gray-600 mt-2">
               {mode === "login" && "Faça login em sua conta"}
               {mode === "register" && "Crie sua conta"}

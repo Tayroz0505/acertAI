@@ -91,7 +91,7 @@ export const NovoItemMercadoModal = ({ trigger }: NovoItemMercadoModalProps) => 
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="bg-orange-500 hover:bg-orange-600">
+          <Button className="bg-mordomo-500 hover:bg-mordomo-600">
             <Plus className="w-4 h-4 mr-2" />
             Itens
           </Button>
@@ -192,7 +192,7 @@ export const NovoItemMercadoModal = ({ trigger }: NovoItemMercadoModalProps) => 
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancelar
             </Button>
-            <Button type="submit" className="bg-orange-500 hover:bg-orange-600">
+            <Button type="submit" className="bg-mordomo-500 hover:bg-mordomo-600">
               Adicionar Item
             </Button>
           </div>

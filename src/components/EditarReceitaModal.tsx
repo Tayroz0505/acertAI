@@ -114,7 +114,7 @@ export const EditarReceitaModal = ({ receita, isOpen, onClose, onSave }: EditarR
               id="categoria"
               value={formData.categoria}
               onChange={(e) => setFormData({...formData, categoria: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-mordomo-500"
             >
               <option value="">Selecione uma categoria</option>
               {categoriasReceita.map(categoria => (
@@ -145,7 +145,7 @@ export const EditarReceitaModal = ({ receita, isOpen, onClose, onSave }: EditarR
                   value="fixa"
                   checked={formData.tipo === 'fixa'}
                   onChange={(e) => setFormData({...formData, tipo: e.target.value as 'fixa' | 'variavel'})}
-                  className="text-orange-600"
+                  className="text-mordomo-600"
                 />
                 <span>Receita Fixa</span>
               </label>
@@ -156,7 +156,7 @@ export const EditarReceitaModal = ({ receita, isOpen, onClose, onSave }: EditarR
                   value="variavel"
                   checked={formData.tipo === 'variavel'}
                   onChange={(e) => setFormData({...formData, tipo: e.target.value as 'fixa' | 'variavel'})}
-                  className="text-orange-600"
+                  className="text-mordomo-600"
                 />
                 <span>Receita Variável</span>
               </label>
@@ -167,7 +167,7 @@ export const EditarReceitaModal = ({ receita, isOpen, onClose, onSave }: EditarR
             <Button type="button" variant="outline" onClick={onClose}>
               Cancelar
             </Button>
-            <Button type="submit" className="bg-orange-500 hover:bg-orange-600">
+            <Button type="submit" className="bg-mordomo-500 hover:bg-mordomo-600">
               Salvar Alterações
             </Button>
           </div>
