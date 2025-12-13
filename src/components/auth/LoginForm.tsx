@@ -99,7 +99,7 @@ export const LoginForm = ({ onSwitchToRegister, onSwitchToForgot }: LoginFormPro
             href="https://acertai.com/#planos"
             className="text-mordomo-600 hover:text-mordomo-500 font-medium"
           >
-            Adiquira aqui
+            Adquira aqui
           </a>
         </span>
       </div>
