@@ -131,7 +131,8 @@ const getPrimeiroDiaAno = () => {
 
 const Relatorios = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("mes");
-  const [selectedCategory, setSelectedCategory] = useState("todas");
+  const [selectedType, setSelectedType] = useState("todas");
+  const [selectedCategoryId, setSelectedCategoryId] = useState("todas");
   const { toast } = useToast();
   const { transacoes, loading: loadingTransacoes } = useTransacoes();
   const { categorias, loading: loadingCategorias } = useCategorias();
@@ -142,13 +143,29 @@ const Relatorios = () => {
         chartData: [] as ChartData[],
         categoryData: [] as CategoryData[],
         filteredTransactions: [] as FilteredTransaction[],
+        summaryData: {
+          receitas: 0,
+          despesas: 0,
+          saldo: 0
+        }
       };
     }
 
+    // 1. Filtrar transações por Tipo e Categoria primeiro (Filtro Global)
+    const globalFiltered = transacoes.filter((t) => {
+      // Filtro de Tipo
+      if (selectedType !== "todas" && t.tipo !== selectedType) return false;
+      
+      // Filtro de Categoria
+      if (selectedCategoryId !== "todas" && t.categoria_id !== selectedCategoryId) return false;
+      
+      return true;
+    });
+
     const hoje = getDataAtual();
 
-    // Filtrar transações baseado no período
-    const filteredByPeriod = transacoes.filter((transacao) => {
+    // 2. Filtrar transações para o resumo (baseado no período selecionado + Filtro Global)
+    const filteredForSummary = globalFiltered.filter((transacao) => {
       const dataTransacao = transacao.data.split("T")[0];
 
       switch (selectedPeriod) {
@@ -160,12 +177,14 @@ const Relatorios = () => {
           return dataTransacao >= getPrimeiroDiaTrimestre();
         case "ano":
           return dataTransacao >= getPrimeiroDiaAno();
+        case "todos":
+          return true;
         default:
           return true;
       }
     });
 
-    // Calcular dados do gráfico baseado no período
+    // 3. Calcular dados do gráfico (usa globalFiltered para ter histórico correto se não for "todos")
     let chartData: ChartData[] = [];
 
     if (selectedPeriod === "semana") {
@@ -173,7 +192,7 @@ const Relatorios = () => {
       const days = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
       chartData = days.map((day) => {
         const dayIndex = days.indexOf(day);
-        const dayTransactions = filteredByPeriod.filter((t) => {
+        const dayTransactions = filteredForSummary.filter((t) => {
           const [ano, mes, dia] = t.data.split("T")[0].split("-");
           const data = new Date(Number(ano), Number(mes) - 1, Number(dia));
           return data.getDay() === dayIndex;
@@ -193,54 +212,72 @@ const Relatorios = () => {
           saldo: receitas - despesas,
         };
       });
-    } else if (selectedPeriod === "mes") {
-      // Agrupar por dia do mês
+    } else if (selectedPeriod === "mes" || selectedPeriod === "todos") {
       const now = new Date();
-      const primeiroDiaMes = getPrimeiroDiaMes();
-      const diasNoMes = new Date(
-        now.getFullYear(),
-        now.getMonth() + 1,
-        0
-      ).getDate();
+      if (selectedPeriod === "mes") {
+        const diasNoMes = new Date(
+          now.getFullYear(),
+          now.getMonth() + 1,
+          0
+        ).getDate();
 
-      chartData = Array.from({ length: diasNoMes }, (_, i) => {
-        const dia = String(i + 1).padStart(2, "0");
-        const dataDia = `${now.getFullYear()}-${String(
-          now.getMonth() + 1
-        ).padStart(2, "0")}-${dia}`;
+        chartData = Array.from({ length: diasNoMes }, (_, i) => {
+          const dia = String(i + 1).padStart(2, "0");
+          const dataDia = `${now.getFullYear()}-${String(
+            now.getMonth() + 1
+          ).padStart(2, "0")}-${dia}`;
 
-        const transacoesDia = filteredByPeriod.filter(
-          (t) => t.data.split("T")[0] === dataDia
-        );
+          const transacoesDia = filteredForSummary.filter(
+            (t) => t.data.split("T")[0] === dataDia
+          );
 
-        const receitas = transacoesDia
-          .filter((t) => t.tipo === "receita")
-          .reduce((sum, t) => sum + Number(t.valor), 0);
-        const despesas = transacoesDia
-          .filter((t) => t.tipo === "despesa")
-          .reduce((sum, t) => sum + Number(t.valor), 0);
+          const receitas = transacoesDia
+            .filter((t) => t.tipo === "receita")
+            .reduce((sum, t) => sum + Number(t.valor), 0);
+          const despesas = transacoesDia
+            .filter((t) => t.tipo === "despesa")
+            .reduce((sum, t) => sum + Number(t.valor), 0);
 
-        return {
-          periodo: dia,
-          receitas,
-          despesas,
-          saldo: receitas - despesas,
-        };
-      });
+          return {
+            periodo: dia,
+            receitas,
+            despesas,
+            saldo: receitas - despesas,
+          };
+        });
+      } else {
+        const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+        chartData = meses.map((mesNome, index) => {
+          const transacoesMes = globalFiltered.filter((t) => {
+            const data = new Date(t.data);
+            return data.getMonth() === index && data.getFullYear() === now.getFullYear();
+          });
+
+          const receitas = transacoesMes
+            .filter((t) => t.tipo === "receita")
+            .reduce((sum, t) => sum + Number(t.valor), 0);
+          const despesas = transacoesMes
+            .filter((t) => t.tipo === "despesa")
+            .reduce((sum, t) => sum + Number(t.valor), 0);
+
+          return {
+            periodo: mesNome,
+            receitas,
+            despesas,
+            saldo: receitas - despesas,
+          };
+        });
+      }
     } else if (selectedPeriod === "trimestre") {
-      // Agrupar por trimestre dos últimos 4 trimestres
       for (let i = 3; i >= 0; i--) {
-        const quarterYear = new Date().getFullYear() - Math.floor(i / 4);
-        const quarterIndex = (new Date().getMonth() / 3 - i + 4) % 4;
+        const d = new Date();
+        d.setMonth(d.getMonth() - (i * 3));
+        const quarterYear = d.getFullYear();
+        const quarterIndex = Math.floor(d.getMonth() / 3);
         const quarterStart = quarterIndex * 3;
 
-        const quarterTransactions = filteredByPeriod.filter((t) => {
-          const [ano, mes, dia] = t.data.split("T")[0].split("-");
-          const transactionDate = new Date(
-            Number(ano),
-            Number(mes) - 1,
-            Number(dia)
-          );
+        const quarterTransactions = globalFiltered.filter((t) => {
+          const transactionDate = new Date(t.data);
           return (
             transactionDate.getFullYear() === quarterYear &&
             transactionDate.getMonth() >= quarterStart &&
@@ -263,16 +300,10 @@ const Relatorios = () => {
         });
       }
     } else if (selectedPeriod === "ano") {
-      // Agrupar por ano dos últimos 5 anos
       for (let i = 4; i >= 0; i--) {
         const targetYear = new Date().getFullYear() - i;
-        const yearTransactions = filteredByPeriod.filter((t) => {
-          const [ano, mes, dia] = t.data.split("T")[0].split("-");
-          const transactionDate = new Date(
-            Number(ano),
-            Number(mes) - 1,
-            Number(dia)
-          );
+        const yearTransactions = globalFiltered.filter((t) => {
+          const transactionDate = new Date(t.data);
           return transactionDate.getFullYear() === targetYear;
         });
 
@@ -292,10 +323,10 @@ const Relatorios = () => {
       }
     }
 
-    // Calcular dados por categoria
+    // Calcular dados por categoria (para o gráfico de pizza)
     const categoryMap = new Map<string, CategoryData>();
 
-    filteredByPeriod
+    filteredForSummary
       .filter((t) => t.tipo === "despesa")
       .forEach((transaction) => {
         const categoryName = transaction.categorias?.nome || "Sem categoria";
@@ -319,15 +350,7 @@ const Relatorios = () => {
     const categoryData = Array.from(categoryMap.values());
 
     // Filtrar transações para a tabela
-    const filteredTransactions = filteredByPeriod
-      .filter((transaction) => {
-        if (selectedCategory === "todas") return true;
-        if (selectedCategory === "receita")
-          return transaction.tipo === "receita";
-        if (selectedCategory === "despesa")
-          return transaction.tipo === "despesa";
-        return true;
-      })
+    const filteredTransactions = filteredForSummary
       .map((transaction) => ({
         id: transaction.id,
         data: transaction.data,
@@ -339,14 +362,31 @@ const Relatorios = () => {
       .sort((a, b) => b.data.localeCompare(a.data))
       .slice(0, 50);
 
+    // Calcular totais do resumo
+    const totalReceitasResumo = filteredForSummary
+      .filter(t => t.tipo === "receita")
+      .reduce((sum, t) => sum + Number(t.valor), 0);
+    const totalDespesasResumo = filteredForSummary
+      .filter(t => t.tipo === "despesa")
+      .reduce((sum, t) => sum + Number(t.valor), 0);
+
     return {
       chartData,
       categoryData,
       filteredTransactions,
+      summaryData: {
+        receitas: totalReceitasResumo,
+        despesas: totalDespesasResumo,
+        saldo: totalReceitasResumo - totalDespesasResumo
+      }
     };
-  }, [transacoes, selectedPeriod, selectedCategory, loadingTransacoes]);
+  }, [transacoes, selectedPeriod, selectedType, selectedCategoryId, loadingTransacoes]);
 
-  const { chartData, categoryData, filteredTransactions } = processedData;
+  const { chartData, categoryData, filteredTransactions, summaryData } = processedData;
+
+  const totalReceitas = summaryData.receitas;
+  const totalDespesas = summaryData.despesas;
+  const saldoTotal = summaryData.saldo;
 
   const chartConfig = {
     receitas: {
@@ -421,20 +461,8 @@ const Relatorios = () => {
     }
   };
 
-  // Calcular totais baseado nos dados do período atual
-  const totalReceitas = chartData.reduce(
-    (acc: number, item: ChartData) => acc + (item.receitas || 0),
-    0
-  );
-  const totalDespesas = chartData.reduce(
-    (acc: number, item: ChartData) => acc + (item.despesas || 0),
-    0
-  );
-  const saldoTotal = totalReceitas - totalDespesas;
-
   // Obter chave correta para o eixo X baseado no período
   const getXAxisKey = () => {
-    if (selectedPeriod === "mes") return "periodo";
     return "periodo";
   };
 
@@ -448,19 +476,43 @@ const Relatorios = () => {
               Relatórios
             </h2>
             <p className="text-sm md:text-base text-muted-foreground">
-              Visualize e analise seus dados financeiros - {selectedPeriod}
+              Visualize e analise seus dados financeiros - {selectedPeriod === "todos" ? "Todo o período" : selectedPeriod}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-2">
             <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-              <SelectTrigger className="w-full sm:w-32">
+              <SelectTrigger className="w-full sm:w-40">
                 <SelectValue placeholder="Período" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="todos">Tudo</SelectItem>
                 <SelectItem value="semana">Semana</SelectItem>
                 <SelectItem value="mes">Mês</SelectItem>
                 <SelectItem value="trimestre">Trimestre</SelectItem>
                 <SelectItem value="ano">Ano</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={selectedCategoryId} onValueChange={setSelectedCategoryId}>
+              <SelectTrigger className="w-full sm:w-48">
+                <SelectValue placeholder="Categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todas">Todas Categorias</SelectItem>
+                {categorias.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.id}>
+                    {cat.nome}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={selectedType} onValueChange={setSelectedType}>
+              <SelectTrigger className="w-full sm:w-40">
+                <SelectValue placeholder="Tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todas">Todos Tipos</SelectItem>
+                <SelectItem value="receita">Receitas</SelectItem>
+                <SelectItem value="despesa">Despesas</SelectItem>
               </SelectContent>
             </Select>
             <Button
@@ -554,19 +606,29 @@ const Relatorios = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="h-[300px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis
-                          dataKey={getXAxisKey()}
-                          tick={{ fontSize: 12 }}
-                        />
-                        <YAxis tick={{ fontSize: 12 }} width={80} />
-                        <ChartTooltip />
-                        <Bar dataKey="receitas" fill="#22c55e" />
-                        <Bar dataKey="despesas" fill="#ef4444" />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <ChartContainer config={chartConfig} className="h-full w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                          <XAxis
+                            dataKey={getXAxisKey()}
+                            tickLine={false}
+                            axisLine={false}
+                            tick={{ fontSize: 12 }}
+                          />
+                          <YAxis 
+                            tickLine={false}
+                            axisLine={false}
+                            tick={{ fontSize: 12 }} 
+                            width={80} 
+                            tickFormatter={(value) => `R$ ${value}`}
+                          />
+                          <ChartTooltip content={<ChartTooltipContent />} />
+                          <Bar dataKey="receitas" fill="var(--color-receitas)" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="despesas" fill="var(--color-despesas)" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </ChartContainer>
                   </div>
                 </CardContent>
               </Card>
@@ -576,28 +638,39 @@ const Relatorios = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center text-base md:text-lg">
                     <TrendingUp className="w-5 h-5 mr-2 text-mordomo-500" />
-                    Evolução do Saldo - {selectedPeriod}
+                    Evolução do Saldo - {selectedPeriod === "todos" ? "Geral" : selectedPeriod}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-[300px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis
-                          dataKey={getXAxisKey()}
-                          tick={{ fontSize: 12 }}
-                        />
-                        <YAxis tick={{ fontSize: 12 }} width={80} />
-                        <ChartTooltip />
-                        <Line
-                          type="monotone"
-                          dataKey="saldo"
-                          stroke="#3b82f6"
-                          strokeWidth={2}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    <ChartContainer config={chartConfig} className="h-full w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={chartData}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                          <XAxis
+                            dataKey={getXAxisKey()}
+                            tickLine={false}
+                            axisLine={false}
+                            tick={{ fontSize: 12 }}
+                          />
+                          <YAxis 
+                            tickLine={false}
+                            axisLine={false}
+                            tick={{ fontSize: 12 }} 
+                            width={80}
+                            tickFormatter={(value) => `R$ ${value}`}
+                          />
+                          <ChartTooltip content={<ChartTooltipContent />} />
+                          <Line
+                            type="monotone"
+                            dataKey="saldo"
+                            stroke="var(--color-saldo)"
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </ChartContainer>
                   </div>
                 </CardContent>
               </Card>
@@ -676,21 +749,8 @@ const Relatorios = () => {
             <Card className="w-full">
               <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <CardTitle className="text-base md:text-lg">
-                  Transações - {selectedPeriod}
+                  Transações do Período
                 </CardTitle>
-                <Select
-                  value={selectedCategory}
-                  onValueChange={setSelectedCategory}
-                >
-                  <SelectTrigger className="w-full sm:w-40">
-                    <SelectValue placeholder="Categoria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todas">Todas</SelectItem>
-                    <SelectItem value="receita">Receitas</SelectItem>
-                    <SelectItem value="despesa">Despesas</SelectItem>
-                  </SelectContent>
-                </Select>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">

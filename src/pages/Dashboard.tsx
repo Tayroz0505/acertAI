@@ -90,7 +90,7 @@ const formatarMes = (data: Date) => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [selectedPeriod, setSelectedPeriod] = useState("mês");
+  const [selectedPeriod, setSelectedPeriod] = useState("mes");
 
   // Usar dados reais dos hooks
   const { transacoes, loading: loadingTransacoes } = useTransacoes();
@@ -129,6 +129,8 @@ const Dashboard = () => {
           return dataTransacao >= getPrimeiroDiaMes();
         case "ano":
           return dataTransacao >= getPrimeiroDiaAno();
+        case "todos":
+          return true;
         default:
           return true;
       }
@@ -348,11 +350,14 @@ const Dashboard = () => {
                 <TabsTrigger value="semana" className="text-sm">
                   Semana
                 </TabsTrigger>
-                <TabsTrigger value="mês" className="text-sm">
+                <TabsTrigger value="mes" className="text-sm">
                   Mês
                 </TabsTrigger>
                 <TabsTrigger value="ano" className="text-sm">
                   Ano
+                </TabsTrigger>
+                <TabsTrigger value="todos" className="text-sm">
+                  Tudo
                 </TabsTrigger>
               </TabsList>
             </Tabs>
