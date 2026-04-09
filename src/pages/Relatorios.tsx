@@ -1,4 +1,26 @@
 import { useState, useMemo } from "react";
+import { 
+  format, 
+  startOfWeek, 
+  endOfWeek, 
+  startOfMonth, 
+  endOfMonth, 
+  startOfQuarter, 
+  endOfQuarter, 
+  startOfYear, 
+  endOfYear, 
+  subDays,
+  isWithinInterval,
+  parseISO,
+  eachDayOfInterval,
+  isSameDay
+} from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { Calendar as CalendarIcon, ChevronDown } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -42,7 +64,7 @@ import {
   DollarSign,
   FileText,
   Download,
-  Calendar,
+  Calendar as CalendarIconLucide,
   PieChart as PieChartIcon,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -84,53 +106,25 @@ interface ChartTooltipProps {
 // Função para formatar a data para exibição (DD/MM/YYYY)
 const formatarData = (dataString: string) => {
   if (!dataString) return "";
-  const [ano, mes, dia] = dataString.split("T")[0].split("-");
-  return `${dia}/${mes}/${ano}`;
-};
-
-// Função para obter a data atual no formato do banco (YYYY-MM-DD)
-const getDataAtual = () => {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
-    2,
-    "0"
-  )}-${String(now.getDate()).padStart(2, "0")}`;
-};
-
-// Função para obter o primeiro dia da semana no formato do banco (YYYY-MM-DD)
-const getPrimeiroDiaSemana = () => {
-  const now = new Date();
-  const primeiroDiaSemana = new Date(now);
-  primeiroDiaSemana.setDate(now.getDate() - now.getDay());
-  return `${primeiroDiaSemana.getFullYear()}-${String(
-    primeiroDiaSemana.getMonth() + 1
-  ).padStart(2, "0")}-${String(primeiroDiaSemana.getDate()).padStart(2, "0")}`;
-};
-
-// Função para obter o primeiro dia do mês no formato do banco (YYYY-MM-DD)
-const getPrimeiroDiaMes = () => {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
-    2,
-    "0"
-  )}-01`;
-};
-
-// Função para obter o primeiro dia do trimestre no formato do banco (YYYY-MM-DD)
-const getPrimeiroDiaTrimestre = () => {
-  const now = new Date();
-  const mes = Math.floor(now.getMonth() / 3) * 3 + 1;
-  return `${now.getFullYear()}-${String(mes).padStart(2, "0")}-01`;
-};
-
-// Função para obter o primeiro dia do ano no formato do banco (YYYY-MM-DD)
-const getPrimeiroDiaAno = () => {
-  const now = new Date();
-  return `${now.getFullYear()}-01-01`;
+  try {
+    const date = parseISO(dataString.split("T")[0]);
+    return format(date, "dd/MM/yyyy");
+  } catch (e) {
+    return dataString;
+  }
 };
 
 const Relatorios = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("mes");
+  const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: startOfMonth(new Date()),
+    to: new Date(),
+  });
+  const [tempDateRange, setTempDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: startOfMonth(new Date()),
+    to: new Date(),
+  });
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedType, setSelectedType] = useState("todas");
   const [selectedCategoryId, setSelectedCategoryId] = useState("todas");
   const { toast } = useToast();
@@ -162,21 +156,23 @@ const Relatorios = () => {
       return true;
     });
 
-    const hoje = getDataAtual();
-
     // 2. Filtrar transações para o resumo (baseado no período selecionado + Filtro Global)
     const filteredForSummary = globalFiltered.filter((transacao) => {
       const dataTransacao = transacao.data.split("T")[0];
+      const today = new Date();
 
       switch (selectedPeriod) {
         case "semana":
-          return dataTransacao >= getPrimeiroDiaSemana();
+          return dataTransacao >= format(startOfWeek(today, { weekStartsOn: 0 }), "yyyy-MM-dd");
         case "mes":
-          return dataTransacao >= getPrimeiroDiaMes();
+          return dataTransacao >= format(startOfMonth(today), "yyyy-MM-dd") && dataTransacao <= format(endOfMonth(today), "yyyy-MM-dd");
         case "trimestre":
-          return dataTransacao >= getPrimeiroDiaTrimestre();
+          return dataTransacao >= format(startOfQuarter(today), "yyyy-MM-dd") && dataTransacao <= format(endOfQuarter(today), "yyyy-MM-dd");
         case "ano":
-          return dataTransacao >= getPrimeiroDiaAno();
+          return dataTransacao >= format(startOfYear(today), "yyyy-MM-dd") && dataTransacao <= format(endOfYear(today), "yyyy-MM-dd");
+        case "periodo":
+          if (!dateRange?.from || !dateRange?.to) return true;
+          return dataTransacao >= format(dateRange.from, "yyyy-MM-dd") && dataTransacao <= format(dateRange.to, "yyyy-MM-dd");
         case "todos":
           return true;
         default:
@@ -190,12 +186,10 @@ const Relatorios = () => {
     if (selectedPeriod === "semana") {
       // Agrupar por dia da semana
       const days = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
-      chartData = days.map((day) => {
-        const dayIndex = days.indexOf(day);
+      chartData = days.map((day, index) => {
         const dayTransactions = filteredForSummary.filter((t) => {
-          const [ano, mes, dia] = t.data.split("T")[0].split("-");
-          const data = new Date(Number(ano), Number(mes) - 1, Number(dia));
-          return data.getDay() === dayIndex;
+          const data = parseISO(t.data.split("T")[0]);
+          return data.getDay() === index;
         });
 
         const receitas = dayTransactions
@@ -212,62 +206,55 @@ const Relatorios = () => {
           saldo: receitas - despesas,
         };
       });
-    } else if (selectedPeriod === "mes" || selectedPeriod === "todos") {
+    } else if (selectedPeriod === "mes" || selectedPeriod === "periodo") {
+      const start = selectedPeriod === "mes" ? startOfMonth(new Date()) : (dateRange?.from || startOfMonth(new Date()));
+      const end = selectedPeriod === "mes" ? endOfMonth(new Date()) : (dateRange?.to || new Date());
+      
+      const interval = eachDayOfInterval({ start, end });
+      
+      chartData = interval.map((day) => {
+        const dateStr = format(day, "yyyy-MM-dd");
+        const transacoesDia = filteredForSummary.filter(
+          (t) => t.data.split("T")[0] === dateStr
+        );
+
+        const receitas = transacoesDia
+          .filter((t) => t.tipo === "receita")
+          .reduce((sum, t) => sum + Number(t.valor), 0);
+        const despesas = transacoesDia
+          .filter((t) => t.tipo === "despesa")
+          .reduce((sum, t) => sum + Number(t.valor), 0);
+
+        return {
+          periodo: format(day, "dd/MM"),
+          receitas,
+          despesas,
+          saldo: receitas - despesas,
+        };
+      });
+    } else if (selectedPeriod === "todos") {
+      const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
       const now = new Date();
-      if (selectedPeriod === "mes") {
-        const diasNoMes = new Date(
-          now.getFullYear(),
-          now.getMonth() + 1,
-          0
-        ).getDate();
-
-        chartData = Array.from({ length: diasNoMes }, (_, i) => {
-          const dia = String(i + 1).padStart(2, "0");
-          const dataDia = `${now.getFullYear()}-${String(
-            now.getMonth() + 1
-          ).padStart(2, "0")}-${dia}`;
-
-          const transacoesDia = filteredForSummary.filter(
-            (t) => t.data.split("T")[0] === dataDia
-          );
-
-          const receitas = transacoesDia
-            .filter((t) => t.tipo === "receita")
-            .reduce((sum, t) => sum + Number(t.valor), 0);
-          const despesas = transacoesDia
-            .filter((t) => t.tipo === "despesa")
-            .reduce((sum, t) => sum + Number(t.valor), 0);
-
-          return {
-            periodo: dia,
-            receitas,
-            despesas,
-            saldo: receitas - despesas,
-          };
+      chartData = meses.map((mesNome, index) => {
+        const transacoesMes = globalFiltered.filter((t) => {
+          const data = parseISO(t.data.split("T")[0]);
+          return data.getMonth() === index && data.getFullYear() === now.getFullYear();
         });
-      } else {
-        const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-        chartData = meses.map((mesNome, index) => {
-          const transacoesMes = globalFiltered.filter((t) => {
-            const data = new Date(t.data);
-            return data.getMonth() === index && data.getFullYear() === now.getFullYear();
-          });
 
-          const receitas = transacoesMes
-            .filter((t) => t.tipo === "receita")
-            .reduce((sum, t) => sum + Number(t.valor), 0);
-          const despesas = transacoesMes
-            .filter((t) => t.tipo === "despesa")
-            .reduce((sum, t) => sum + Number(t.valor), 0);
+        const receitas = transacoesMes
+          .filter((t) => t.tipo === "receita")
+          .reduce((sum, t) => sum + Number(t.valor), 0);
+        const despesas = transacoesMes
+          .filter((t) => t.tipo === "despesa")
+          .reduce((sum, t) => sum + Number(t.valor), 0);
 
-          return {
-            periodo: mesNome,
-            receitas,
-            despesas,
-            saldo: receitas - despesas,
-          };
-        });
-      }
+        return {
+          periodo: mesNome,
+          receitas,
+          despesas,
+          saldo: receitas - despesas,
+        };
+      });
     } else if (selectedPeriod === "trimestre") {
       for (let i = 3; i >= 0; i--) {
         const d = new Date();
@@ -327,7 +314,7 @@ const Relatorios = () => {
     const categoryMap = new Map<string, CategoryData>();
 
     filteredForSummary
-      .filter((t) => t.tipo === "despesa")
+      .filter((t) => selectedType === "todas" ? t.tipo === "despesa" : t.tipo === selectedType)
       .forEach((transaction) => {
         const categoryName = transaction.categorias?.nome || "Sem categoria";
         const categoryColor = transaction.categorias?.cor || "#6B7280";
@@ -380,7 +367,7 @@ const Relatorios = () => {
         saldo: totalReceitasResumo - totalDespesasResumo
       }
     };
-  }, [transacoes, selectedPeriod, selectedType, selectedCategoryId, loadingTransacoes]);
+  }, [transacoes, selectedPeriod, selectedType, selectedCategoryId, loadingTransacoes, dateRange]);
 
   const { chartData, categoryData, filteredTransactions, summaryData } = processedData;
 
@@ -476,7 +463,12 @@ const Relatorios = () => {
               Relatórios
             </h2>
             <p className="text-sm md:text-base text-muted-foreground">
-              Visualize e analise seus dados financeiros - {selectedPeriod === "todos" ? "Todo o período" : selectedPeriod}
+              Visualize e analise seus dados financeiros - {selectedPeriod === "todos" ? "Todo o período" : 
+                selectedPeriod === "semana" ? "Semana Atual" :
+                selectedPeriod === "mes" ? "Mês Atual" :
+                selectedPeriod === "trimestre" ? "Trimestre Atual" :
+                selectedPeriod === "ano" ? "Ano Atual" :
+                selectedPeriod === "periodo" ? "Período Personalizado" : "Relatório"}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-2">
@@ -490,8 +482,70 @@ const Relatorios = () => {
                 <SelectItem value="mes">Mês</SelectItem>
                 <SelectItem value="trimestre">Trimestre</SelectItem>
                 <SelectItem value="ano">Ano</SelectItem>
+                <SelectItem value="periodo">Período Personalizado</SelectItem>
               </SelectContent>
             </Select>
+
+            {selectedPeriod === "periodo" && (
+              <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full sm:w-[240px] justify-start text-left font-normal",
+                      (!dateRange?.from) && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? (
+                      dateRange.to ? (
+                        <>
+                          {format(dateRange.from, "dd/MM/yyyy")} -{" "}
+                          {format(dateRange.to, "dd/MM/yyyy")}
+                        </>
+                      ) : (
+                        format(dateRange.from, "dd/MM/yyyy")
+                      )
+                    ) : (
+                      <span>Selecione um período</span>
+                    )}
+                    <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <div className="p-3">
+                    <Calendar
+                      initialFocus
+                      mode="range"
+                      defaultMonth={tempDateRange?.from}
+                      selected={{ from: tempDateRange?.from, to: tempDateRange?.to }}
+                      onSelect={(range: any) => setTempDateRange(range)}
+                      numberOfMonths={2}
+                      locale={ptBR}
+                    />
+                    <div className="flex items-center justify-end mt-2 pt-2 border-t">
+                      <Button 
+                        size="sm" 
+                        onClick={() => {
+                          if (tempDateRange?.from && tempDateRange?.to) {
+                            setDateRange(tempDateRange);
+                            setIsCalendarOpen(false);
+                          } else {
+                            toast({
+                              title: "Selecione um intervalo",
+                              description: "Selecione as datas de início e fim para filtrar.",
+                              variant: "destructive"
+                            });
+                          }
+                        }}
+                      >
+                        Filtrar Período
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
             <Select value={selectedCategoryId} onValueChange={setSelectedCategoryId}>
               <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Categoria" />
@@ -540,7 +594,12 @@ const Relatorios = () => {
                 R$ {totalReceitas.toLocaleString("pt-BR")}
               </div>
               <p className="text-xs text-muted-foreground">
-                Período: {selectedPeriod}
+                Período: {selectedPeriod === "todos" ? "Todo o período" : 
+                  selectedPeriod === "semana" ? "Semana Atual" :
+                  selectedPeriod === "mes" ? "Mês Atual" :
+                  selectedPeriod === "trimestre" ? "Trimestre Atual" :
+                  selectedPeriod === "ano" ? "Ano Atual" :
+                  selectedPeriod === "periodo" ? "Personalizado" : selectedPeriod}
               </p>
             </CardContent>
           </Card>
@@ -556,7 +615,12 @@ const Relatorios = () => {
                 R$ {totalDespesas.toLocaleString("pt-BR")}
               </div>
               <p className="text-xs text-muted-foreground">
-                Período: {selectedPeriod}
+                Período: {selectedPeriod === "todos" ? "Todo o período" : 
+                  selectedPeriod === "semana" ? "Semana Atual" :
+                  selectedPeriod === "mes" ? "Mês Atual" :
+                  selectedPeriod === "trimestre" ? "Trimestre Atual" :
+                  selectedPeriod === "ano" ? "Ano Atual" :
+                  selectedPeriod === "periodo" ? "Personalizado" : selectedPeriod}
               </p>
             </CardContent>
           </Card>
@@ -684,7 +748,7 @@ const Relatorios = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center text-base md:text-lg">
                     <PieChartIcon className="w-5 h-5 mr-2 text-mordomo-500" />
-                    Despesas por Categoria
+                    {selectedType === "receita" ? "Receitas por Categoria" : "Despesas por Categoria"}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
