@@ -162,14 +162,16 @@ const Relatorios = () => {
       const today = new Date();
 
       switch (selectedPeriod) {
+        case "dia":
+          return dataTransacao === format(today, "yyyy-MM-dd");
         case "semana":
-          return dataTransacao >= format(startOfWeek(today, { weekStartsOn: 0 }), "yyyy-MM-dd");
+          return dataTransacao >= format(startOfWeek(today, { weekStartsOn: 0 }), "yyyy-MM-dd") && dataTransacao <= format(today, "yyyy-MM-dd");
         case "mes":
-          return dataTransacao >= format(startOfMonth(today), "yyyy-MM-dd") && dataTransacao <= format(endOfMonth(today), "yyyy-MM-dd");
+          return dataTransacao >= format(startOfMonth(today), "yyyy-MM-dd") && dataTransacao <= format(today, "yyyy-MM-dd");
         case "trimestre":
-          return dataTransacao >= format(startOfQuarter(today), "yyyy-MM-dd") && dataTransacao <= format(endOfQuarter(today), "yyyy-MM-dd");
+          return dataTransacao >= format(startOfQuarter(today), "yyyy-MM-dd") && dataTransacao <= format(today, "yyyy-MM-dd");
         case "ano":
-          return dataTransacao >= format(startOfYear(today), "yyyy-MM-dd") && dataTransacao <= format(endOfYear(today), "yyyy-MM-dd");
+          return dataTransacao >= format(startOfYear(today), "yyyy-MM-dd") && dataTransacao <= format(today, "yyyy-MM-dd");
         case "periodo":
           if (!dateRange?.from || !dateRange?.to) return true;
           return dataTransacao >= format(dateRange.from, "yyyy-MM-dd") && dataTransacao <= format(dateRange.to, "yyyy-MM-dd");
@@ -206,9 +208,13 @@ const Relatorios = () => {
           saldo: receitas - despesas,
         };
       });
-    } else if (selectedPeriod === "mes" || selectedPeriod === "periodo") {
-      const start = selectedPeriod === "mes" ? startOfMonth(new Date()) : (dateRange?.from || startOfMonth(new Date()));
-      const end = selectedPeriod === "mes" ? endOfMonth(new Date()) : (dateRange?.to || new Date());
+    } else if (selectedPeriod === "mes" || selectedPeriod === "periodo" || selectedPeriod === "dia") {
+      const start = selectedPeriod === "mes" ? startOfMonth(new Date()) : 
+                    selectedPeriod === "dia" ? new Date() :
+                    (dateRange?.from || startOfMonth(new Date()));
+      const end = selectedPeriod === "mes" ? new Date() : 
+                  selectedPeriod === "dia" ? new Date() :
+                  (dateRange?.to || new Date());
       
       const interval = eachDayOfInterval({ start, end });
       
@@ -463,12 +469,24 @@ const Relatorios = () => {
               Relatórios
             </h2>
             <p className="text-sm md:text-base text-muted-foreground">
-              Visualize e analise seus dados financeiros - {selectedPeriod === "todos" ? "Todo o período" : 
-                selectedPeriod === "semana" ? "Semana Atual" :
-                selectedPeriod === "mes" ? "Mês Atual" :
-                selectedPeriod === "trimestre" ? "Trimestre Atual" :
-                selectedPeriod === "ano" ? "Ano Atual" :
-                selectedPeriod === "periodo" ? "Período Personalizado" : "Relatório"}
+              {(() => {
+                const today = new Date();
+                const formatRange = (start: Date, end: Date) => `${format(start, "dd/MM/yyyy")} a ${format(end, "dd/MM/yyyy")}`;
+                
+                switch (selectedPeriod) {
+                  case "todos": return "Todo o período";
+                  case "dia": return `Hoje: ${format(today, "dd/MM/yyyy")}`;
+                  case "semana": return `Semana: ${formatRange(startOfWeek(today, { weekStartsOn: 0 }), today)}`;
+                  case "mes": return `Mês: ${formatRange(startOfMonth(today), today)}`;
+                  case "trimestre": return `Trimestre: ${formatRange(startOfQuarter(today), today)}`;
+                  case "ano": return `Ano: ${formatRange(startOfYear(today), today)}`;
+                  case "periodo": 
+                    return dateRange?.from && dateRange?.to 
+                      ? `Período: ${formatRange(dateRange.from, dateRange.to)}`
+                      : "Período Personalizado";
+                  default: return "Relatório";
+                }
+              })()}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-2">
@@ -478,6 +496,7 @@ const Relatorios = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="todos">Tudo</SelectItem>
+                <SelectItem value="dia">Dia</SelectItem>
                 <SelectItem value="semana">Semana</SelectItem>
                 <SelectItem value="mes">Mês</SelectItem>
                 <SelectItem value="trimestre">Trimestre</SelectItem>
@@ -595,6 +614,7 @@ const Relatorios = () => {
               </div>
               <p className="text-xs text-muted-foreground">
                 Período: {selectedPeriod === "todos" ? "Todo o período" : 
+                  selectedPeriod === "dia" ? "Hoje" :
                   selectedPeriod === "semana" ? "Semana Atual" :
                   selectedPeriod === "mes" ? "Mês Atual" :
                   selectedPeriod === "trimestre" ? "Trimestre Atual" :
@@ -616,6 +636,7 @@ const Relatorios = () => {
               </div>
               <p className="text-xs text-muted-foreground">
                 Período: {selectedPeriod === "todos" ? "Todo o período" : 
+                  selectedPeriod === "dia" ? "Hoje" :
                   selectedPeriod === "semana" ? "Semana Atual" :
                   selectedPeriod === "mes" ? "Mês Atual" :
                   selectedPeriod === "trimestre" ? "Trimestre Atual" :

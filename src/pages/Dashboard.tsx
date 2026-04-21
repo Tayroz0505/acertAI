@@ -14,6 +14,8 @@ import {
   AlertTriangle,
   Package,
   CreditCard,
+  Calendar as CalendarIcon,
+  ChevronDown
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTransacoes } from "@/hooks/useTransacoes";
@@ -22,51 +24,38 @@ import { useDividas } from "@/hooks/useDividas";
 import { useVeiculos } from "@/hooks/useVeiculos";
 import { useManutencoesPendentes } from "@/hooks/useManutencoesPendentes";
 import { useProfile } from "@/hooks/useProfile";
+import { 
+  format, 
+  startOfWeek, 
+  startOfMonth, 
+  startOfQuarter,
+  startOfYear, 
+  parseISO,
+  isWithinInterval,
+  isSameDay
+} from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 // Função para formatar a data corretamente
 const formatarData = (dataString: string) => {
   if (!dataString) return "";
-  const [ano, mes, dia] = dataString.split("T")[0].split("-");
-  return `${dia}/${mes}/${ano}`;
-};
-
-// Função para obter a data atual no formato do banco (YYYY-MM-DD)
-const getDataAtual = () => {
-  const now = new Date();
-  const ano = now.getFullYear();
-  const mes = String(now.getMonth() + 1).padStart(2, "0");
-  const dia = String(now.getDate()).padStart(2, "0");
-  return `${ano}-${mes}-${dia}`;
-};
-
-// Função para obter o primeiro dia da semana no formato do banco (YYYY-MM-DD)
-const getPrimeiroDiaSemana = () => {
-  const now = new Date();
-  const primeiroDiaSemana = new Date(now);
-  primeiroDiaSemana.setDate(now.getDate() - now.getDay());
-  return `${primeiroDiaSemana.getFullYear()}-${String(
-    primeiroDiaSemana.getMonth() + 1
-  ).padStart(2, "0")}-${String(primeiroDiaSemana.getDate()).padStart(2, "0")}`;
-};
-
-// Função para obter o primeiro dia do mês no formato do banco (YYYY-MM-DD)
-const getPrimeiroDiaMes = () => {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
-    2,
-    "0"
-  )}-01`;
-};
-
-// Função para obter o primeiro dia do ano no formato do banco (YYYY-MM-DD)
-const getPrimeiroDiaAno = () => {
-  const now = new Date();
-  return `${now.getFullYear()}-01-01`;
-};
-
-// Função para comparar datas no formato do banco (YYYY-MM-DD)
-const compararDatas = (data1: string, data2: string) => {
-  return data1.split("T")[0] === data2;
+  try {
+    const date = parseISO(dataString.split("T")[0]);
+    return format(date, "dd/MM/yyyy");
+  } catch (e) {
+    return dataString;
+  }
 };
 
 // Função para formatar o nome do mês
@@ -90,7 +79,17 @@ const formatarMes = (data: Date) => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [selectedPeriod, setSelectedPeriod] = useState("mes");
+  const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: startOfMonth(new Date()),
+    to: new Date(),
+  });
+  const [tempDateRange, setTempDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: startOfMonth(new Date()),
+    to: new Date(),
+  });
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   // Usar dados reais dos hooks
   const { transacoes, loading: loadingTransacoes } = useTransacoes();
@@ -115,20 +114,26 @@ const Dashboard = () => {
       };
     }
 
-    const hoje = getDataAtual();
+    const hoje = format(new Date(), "yyyy-MM-dd");
 
     const transacoesFiltradas = transacoes.filter((transacao) => {
       const dataTransacao = transacao.data.split("T")[0];
+      const today = new Date();
 
       switch (selectedPeriod) {
         case "dia":
           return dataTransacao === hoje;
         case "semana":
-          return dataTransacao >= getPrimeiroDiaSemana();
+          return dataTransacao >= format(startOfWeek(today, { weekStartsOn: 0 }), "yyyy-MM-dd") && dataTransacao <= hoje;
         case "mes":
-          return dataTransacao >= getPrimeiroDiaMes();
+          return dataTransacao >= format(startOfMonth(today), "yyyy-MM-dd") && dataTransacao <= hoje;
+        case "trimestre":
+          return dataTransacao >= format(startOfQuarter(today), "yyyy-MM-dd") && dataTransacao <= hoje;
         case "ano":
-          return dataTransacao >= getPrimeiroDiaAno();
+          return dataTransacao >= format(startOfYear(today), "yyyy-MM-dd") && dataTransacao <= hoje;
+        case "periodo":
+          if (!dateRange?.from || !dateRange?.to) return true;
+          return dataTransacao >= format(dateRange.from, "yyyy-MM-dd") && dataTransacao <= format(dateRange.to, "yyyy-MM-dd");
         case "todos":
           return true;
         default:
@@ -241,27 +246,30 @@ const Dashboard = () => {
   const user = {
     name: profile?.name || "Usuário",
     getCurrentPeriod: () => {
-      // Ajusta para o timezone do Brasil (UTC-3)
-      const now = new Date();
-      const offset = -3; // UTC-3 (Brasil)
-      const today = new Date(now.getTime() + offset * 60 * 60 * 1000);
+      const today = new Date();
+
+      const formatRange = (start: Date, end: Date) => {
+        return `${format(start, "dd/MM/yyyy")} a ${format(end, "dd/MM/yyyy")}`;
+      };
 
       switch (selectedPeriod) {
-        case "dia": {
-          const dataFormatada = formatarData(today.toISOString());
-          return dataFormatada;
-        }
-        case "semana": {
-          const startOfWeek = new Date(today);
-          startOfWeek.setDate(today.getDate() - today.getDay());
-          return `Semana de ${formatarData(startOfWeek.toISOString())}`;
-        }
+        case "dia":
+          return `Hoje, ${format(today, "dd/MM/yyyy")}`;
+        case "semana":
+          return `Semana: ${formatRange(startOfWeek(today, { weekStartsOn: 0 }), today)}`;
         case "mes":
-          return formatarMes(today);
+          return `Mês: ${formatRange(startOfMonth(today), today)}`;
+        case "trimestre":
+          return `Trimestre: ${formatRange(startOfQuarter(today), today)}`;
         case "ano":
-          return today.getFullYear().toString();
+          return `Ano: ${formatRange(startOfYear(today), today)}`;
+        case "periodo":
+          if (dateRange?.from && dateRange?.to) {
+            return `Período: ${formatRange(dateRange.from, dateRange.to)}`;
+          }
+          return "Selecione um período";
         default:
-          return "Período atual";
+          return "Todo o período";
       }
     },
   };
@@ -337,30 +345,82 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
-          <div className="w-full sm:w-auto">
-            <Tabs
-              value={selectedPeriod}
-              onValueChange={setSelectedPeriod}
-              className="w-full sm:w-auto"
-            >
-              <TabsList className="w-full sm:w-auto grid grid-cols-4 sm:flex">
-                <TabsTrigger value="dia" className="text-sm">
-                  Dia
-                </TabsTrigger>
-                <TabsTrigger value="semana" className="text-sm">
-                  Semana
-                </TabsTrigger>
-                <TabsTrigger value="mes" className="text-sm">
-                  Mês
-                </TabsTrigger>
-                <TabsTrigger value="ano" className="text-sm">
-                  Ano
-                </TabsTrigger>
-                <TabsTrigger value="todos" className="text-sm">
-                  Tudo
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
+          <div className="flex flex-col sm:flex-row items-center gap-2">
+            <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+              <SelectTrigger className="w-full sm:w-40">
+                <SelectValue placeholder="Período" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todos">Tudo</SelectItem>
+                <SelectItem value="dia">Dia</SelectItem>
+                <SelectItem value="semana">Semana</SelectItem>
+                <SelectItem value="mes">Mês</SelectItem>
+                <SelectItem value="trimestre">Trimestre</SelectItem>
+                <SelectItem value="ano">Ano</SelectItem>
+                <SelectItem value="periodo">Período Personalizado</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {selectedPeriod === "periodo" && (
+              <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full sm:w-[240px] justify-start text-left font-normal",
+                      (!dateRange?.from) && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? (
+                      dateRange.to ? (
+                        <>
+                          {format(dateRange.from, "dd/MM/yyyy")} -{" "}
+                          {format(dateRange.to, "dd/MM/yyyy")}
+                        </>
+                      ) : (
+                        format(dateRange.from, "dd/MM/yyyy")
+                      )
+                    ) : (
+                      <span>Selecione um período</span>
+                    )}
+                    <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <div className="p-3">
+                    <Calendar
+                      initialFocus
+                      mode="range"
+                      defaultMonth={tempDateRange?.from}
+                      selected={{ from: tempDateRange?.from, to: tempDateRange?.to }}
+                      onSelect={(range: any) => setTempDateRange(range)}
+                      numberOfMonths={2}
+                      locale={ptBR}
+                    />
+                    <div className="flex items-center justify-end mt-2 pt-2 border-t">
+                      <Button 
+                        size="sm" 
+                        onClick={() => {
+                          if (tempDateRange?.from && tempDateRange?.to) {
+                            setDateRange(tempDateRange);
+                            setIsCalendarOpen(false);
+                          } else {
+                            toast({
+                              title: "Selecione um intervalo",
+                              description: "Selecione as datas de início e fim para filtrar.",
+                              variant: "destructive"
+                            });
+                          }
+                        }}
+                      >
+                        Filtrar Período
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
           </div>
         </div>
 

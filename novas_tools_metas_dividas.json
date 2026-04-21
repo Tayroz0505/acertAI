@@ -1,0 +1,305 @@
+{
+  "meta": {
+    "instanceId": "3eed9c8adbc05dd5867db25d2259f332486125a41fd7f622a0b570649fa971c5"
+  },
+  "nodes": [
+    {
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.6,
+      "credentials": {
+        "postgres": {
+          "id": "48iD2ikghUbXNBa9",
+          "name": "IA-Tayroz"
+        }
+      },
+      "position": [
+        4128,
+        -1000
+      ],
+      "id": "398a2e82-bbca-45f7-a427-fb2340a51f8f",
+      "name": "tool_adicionar_meta",
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "metas",
+          "mode": "list",
+          "cachedResultName": "metas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $('consultar_user_id').item.json.user_id }}",
+            "titulo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('titulo', '', 'string') }}",
+            "tipo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tipo', '', 'string') }}",
+            "valor_alvo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('valor_alvo', '', 'number') }}",
+            "valor_atual": 0,
+            "data_inicio": "={{ $now.format('yyyy-MM-dd') }}",
+            "data_limite": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('data_limite', '', 'string') }}",
+            "status": "ativa"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "id": "titulo",
+              "displayName": "titulo",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "id": "tipo",
+              "displayName": "tipo",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "id": "valor_alvo",
+              "displayName": "valor_alvo",
+              "required": true,
+              "type": "number"
+            },
+            {
+              "id": "valor_atual",
+              "displayName": "valor_atual",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "id": "data_inicio",
+              "displayName": "data_inicio",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "id": "data_limite",
+              "displayName": "data_limite",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.6,
+      "credentials": {
+        "postgres": {
+          "id": "48iD2ikghUbXNBa9",
+          "name": "IA-Tayroz"
+        }
+      },
+      "position": [
+        3904,
+        -1000
+      ],
+      "id": "bbeaedf9-98be-4a86-86f7-117aeaca5a04",
+      "name": "tool_consultar_metas",
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "metas",
+          "mode": "list",
+          "cachedResultName": "metas"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "user_id",
+              "value": "={{ $('consultar_user_id').item.json.user_id }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.6,
+      "credentials": {
+        "postgres": {
+          "id": "48iD2ikghUbXNBa9",
+          "name": "IA-Tayroz"
+        }
+      },
+      "position": [
+        4128,
+        -800
+      ],
+      "id": "b24bf2fa-1178-411a-a4c9-76ad2f6719f3",
+      "name": "tool_adicionar_divida",
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "dividas",
+          "mode": "list",
+          "cachedResultName": "dividas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $('consultar_user_id').item.json.user_id }}",
+            "descricao": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('descricao', '', 'string') }}",
+            "valor_total": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('valor_total', '', 'number') }}",
+            "valor_pago": 0,
+            "valor_restante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('valor_total', '', 'number') }}",
+            "data_vencimento": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('data_vencimento', '', 'string') }}",
+            "parcelas": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parcelas', '', 'number') }}",
+            "parcelas_pagas": 0,
+            "status": "pendente",
+            "credor": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('credor', '', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "id": "descricao",
+              "displayName": "descricao",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "id": "valor_total",
+              "displayName": "valor_total",
+              "required": true,
+              "type": "number"
+            },
+            {
+              "id": "valor_pago",
+              "displayName": "valor_pago",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "id": "valor_restante",
+              "displayName": "valor_restante",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "id": "data_vencimento",
+              "displayName": "data_vencimento",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "id": "parcelas",
+              "displayName": "parcelas",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "id": "parcelas_pagas",
+              "displayName": "parcelas_pagas",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "id": "credor",
+              "displayName": "credor",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      }
+    },
+    {
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.6,
+      "credentials": {
+        "postgres": {
+          "id": "48iD2ikghUbXNBa9",
+          "name": "IA-Tayroz"
+        }
+      },
+      "position": [
+        3904,
+        -800
+      ],
+      "id": "42fb92f1-4072-4d2c-9857-1bef878b338f",
+      "name": "tool_consultar_dividas",
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "dividas",
+          "mode": "list",
+          "cachedResultName": "dividas"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "user_id",
+              "value": "={{ $('consultar_user_id').item.json.user_id }}"
+            },
+            {
+              "column": "status",
+              "value": "pendente"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {},
+  "pinData": {}
+}

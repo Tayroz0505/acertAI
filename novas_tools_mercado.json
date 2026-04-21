@@ -1,0 +1,166 @@
+{
+  "meta": {
+    "instanceId": "3eed9c8adbc05dd5867db25d2259f332486125a41fd7f622a0b570649fa971c5"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "itens_mercado",
+          "mode": "list",
+          "cachedResultName": "itens_mercado"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $('consultar_user_id').item.json.user_id }}",
+            "descricao": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('descricao', ``, 'string') }}",
+            "quantidade_ideal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('quantidade_ideal', ``, 'number') }}",
+            "unidade_medida": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('unidade_medida', ``, 'string') }}",
+            "quantidade_atual": 0,
+            "preco_atual": 0,
+            "status": "sem_estoque"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "descricao",
+              "displayName": "descricao",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "quantidade_ideal",
+              "displayName": "quantidade_ideal",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "unidade_medida",
+              "displayName": "unidade_medida",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "quantidade_atual",
+              "displayName": "quantidade_atual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "preco_atual",
+              "displayName": "preco_atual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.6,
+      "position": [
+        4128,
+        -1232
+      ],
+      "id": "a90104eb-03d4-4de1-a6d1-9410b82281b3",
+      "name": "tool_adicionar_item_mercado",
+      "credentials": {
+        "postgres": {
+          "id": "48iD2ikghUbXNBa9",
+          "name": "IA-Tayroz"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "itens_mercado",
+          "mode": "list",
+          "cachedResultName": "itens_mercado"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "user_id",
+              "value": "={{ $('consultar_user_id').item.json.user_id }}"
+            },
+            {
+              "column": "status",
+              "value": "sem_estoque"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.6,
+      "position": [
+        3904,
+        -1232
+      ],
+      "id": "b908eb86-03d4-4de1-a6d1-9410b82281a8",
+      "name": "tool_consultar_mercado",
+      "credentials": {
+        "postgres": {
+          "id": "48iD2ikghUbXNBa9",
+          "name": "IA-Tayroz"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "pinData": {}
+}
